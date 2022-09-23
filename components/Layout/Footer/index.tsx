@@ -1,23 +1,38 @@
-import { Col, Row } from "antd";
 import { NextPage } from "next";
-const style: React.CSSProperties = { background: "#0092ff", padding: "8px 0" };
-const Footer: NextPage = () => {
+import styles from "./footer.module.scss";
+interface ILink {
+  label: string;
+  link?: string;
+}
+
+interface ILinkList {
+  title: string;
+  list: ILink[];
+}
+
+interface IQRCode {
+  image: string;
+  text: string;
+}
+export interface IFooterProps {
+  title: string;
+  linkList: ILinkList[];
+  qrCode: IQRCode;
+  copyRight: string;
+  siteNumber: string; // 站点备案号
+  publicNumber: string; // 公安备案号
+}
+const Footer = ({
+  title,
+  linkList,
+  qrCode,
+  copyRight,
+  siteNumber,
+  publicNumber,
+}: IFooterProps) => {
   return (
-    <footer>
-      <Row gutter={16}>
-        <Col className="gutter-row" span={6}>
-          <div style={style}></div>
-        </Col>
-        <Col className="gutter-row" span={6}>
-          <div style={style}>col-6</div>
-        </Col>
-        <Col className="gutter-row" span={6}>
-          <div style={style}>col-6</div>
-        </Col>
-        <Col className="gutter-row" span={6}>
-          <div style={style}>col-6</div>
-        </Col>
-      </Row>
+    <footer className={styles.footer}>
+      <div className={styles.test}>底部</div>
     </footer>
   );
 };

@@ -3,7 +3,8 @@ import { NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { getNavKeyByPathName } from "../../../utils/location";
+import { getNavKeyByPathName } from "@/utils/location";
+export interface INavBarProps {}
 const items = [
   {
     label: <Link href={`/`}>首页</Link>,
