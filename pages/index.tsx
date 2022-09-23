@@ -11,7 +11,7 @@ const Home: NextPage = () => {
         <meta name="description" content="数智招新官网" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className={styles.test}>首页</div>
+      <div className={styles.footer}>首页</div>
     </>
   );
 };
