@@ -6,28 +6,19 @@ import {
   Input,
   Radio,
   Select,
-  Tabs,
   Upload,
   Affix,
-  Table,
-  Steps,
 } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import { PlusOutlined } from "@ant-design/icons";
 import { InboxOutlined } from "@ant-design/icons";
 import type { UploadProps } from "antd";
-import type { ColumnsType } from "antd/es/table";
-import { getLocalStorage } from "@/utils/auth";
-import styles from "./personal.module.scss";
-import { MutableRefObject, useEffect, useRef, useState } from "react";
-import { getLocationOrigin } from "next/dist/shared/lib/utils";
-import Router, { useRouter } from "next/router";
-import { redirect } from "next/dist/server/api-utils";
+import styles from "./resume.module.scss";
+import { useState } from "react";
 const MyResume = () => {
   const onFinish = (values: any) => {
     console.log("Success:", values);
   };
-
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
@@ -53,7 +44,7 @@ const MyResume = () => {
   };
   const [bottom, setBottom] = useState(10);
   return (
-    <div>
+    <div className={styles.resumeWarp}>
       <Form
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
@@ -63,14 +54,6 @@ const MyResume = () => {
         layout="horizontal"
       >
         <Card title={<h3>个人信息</h3>} extra={<Button>编辑</Button>}>
-          {/* <Form
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-          wrapperCol={{
-            span: 10,
-          }}
-          layout="horizontal"
-        > */}
           <Form.Item
             label="姓名"
             name="name"
@@ -153,20 +136,8 @@ const MyResume = () => {
               </div>
             </Upload>
           </Form.Item>
-          {/* </Form> */}
         </Card>
         <Card title={<h3>校园生活</h3>} extra={<Button>编辑</Button>}>
-          {/* <Form
-          labelCol={{
-            span: 4,
-          }}
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-          wrapperCol={{
-            span: 14,
-          }}
-          layout="horizontal"
-        > */}
           <Form.Item
             label="学习情况"
             name="learning"
@@ -181,20 +152,8 @@ const MyResume = () => {
           >
             <TextArea rows={4} />
           </Form.Item>
-          {/* </Form> */}
         </Card>
         <Card title={<h3>作品附件</h3>} extra={<Button>编辑</Button>}>
-          {/* <Form
-          labelCol={{
-            span: 4,
-          }}
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-          wrapperCol={{
-            span: 14,
-          }}
-          layout="horizontal"
-        > */}
           <Form.Item label="作品链接" name="link">
             <Input />
           </Form.Item>
@@ -212,7 +171,6 @@ const MyResume = () => {
               </p>
             </Dragger>
           </Form.Item>
-          {/* </Form> */}
         </Card>
         <Affix offsetBottom={bottom}>
           <div className="operation">
@@ -228,90 +186,4 @@ const MyResume = () => {
     </div>
   );
 };
-const MyProgress = () => {
-  const { Step } = Steps;
-  interface DataType {
-    key: React.Key;
-    pid: string;
-    title: string;
-    applyTime: string;
-    status: string;
-    step: any;
-  }
-
-  const columns: ColumnsType<DataType> = [
-    { title: "职位ID", dataIndex: "pid", key: "pid" },
-    { title: "职位", dataIndex: "title", key: "title" },
-    { title: "申请时间", dataIndex: "applyTime", key: "applyTime" },
-    { title: "当前状态", dataIndex: "status", key: "status" },
-  ];
-  const data: DataType[] = [
-    {
-      key: "SZ2023FE",
-      pid: "SZ2023FE",
-      title: "前端开发",
-      applyTime: "2023-3-14",
-      status: "一轮考核",
-      step: (
-        <Steps current={1} status="error">
-          <Step title="Finished" description="This is a description" />
-          <Step title="In Process" description="This is a description" />
-          <Step title="Waiting" description="This is a description" />
-        </Steps>
-      ),
-    },
-  ];
-  return (
-    <div>
-      <Card title={<h3>进行中</h3>}>
-        <Table
-          pagination={false}
-          columns={columns}
-          expandable={{
-            expandedRowRender: (record) => (
-              <p style={{ margin: 0 }}>{record.step}</p>
-            ),
-          }}
-          dataSource={data}
-        />
-      </Card>
-      <Card title={<h3>已结束</h3>}></Card>
-    </div>
-  );
-};
-const Personal = () => {
-  const router = useRouter();
-  useEffect(() => {
-    let admin_token = getLocalStorage("admin_token");
-    if (!admin_token) {
-      router.push("/login");
-    }
-  });
-  let items = [
-    {
-      label: "我的进度",
-      key: "1",
-      children: <MyProgress />,
-    },
-    {
-      label: "我的简历",
-      key: "2",
-      children: <MyResume />,
-    },
-  ];
-  return (
-    <div className="personal contentCommon">
-      <Card
-        title={
-          <div>
-            <p> Hi,qx</p>
-            <p>欢迎参加数智工作室校园招新</p>
-          </div>
-        }
-      ></Card>
-      <Tabs defaultActiveKey="1" type="card" items={items} />
-    </div>
-  );
-};
-
-export default Personal;
+export default MyResume;

@@ -15,7 +15,7 @@ const items = [
     key: "recruitment",
   },
   {
-    label: <Link href={`/personal`}>个人中心</Link>,
+    label: <Link href={`/personal/application`}>个人中心</Link>,
     key: "personal",
   },
 ];
