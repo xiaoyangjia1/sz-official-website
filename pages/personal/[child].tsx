@@ -7,7 +7,6 @@ import Resume from "@/components/Resume";
 import Application from "@/components/Application";
 import axios from "axios";
 const Personal = ({ data }: any) => {
-  console.log(data);
   const router = useRouter();
   const { child } = router.query;
   const [activeKey, setActiveKey] = useState("1");
@@ -33,7 +32,6 @@ const Personal = ({ data }: any) => {
     },
   ];
   const onChange = (key: string) => {
-    console.log(key);
     if (key === "1") {
       router.push("/personal/application");
     } else {
@@ -60,23 +58,23 @@ const Personal = ({ data }: any) => {
     </div>
   );
 };
-export async function getStaticProps({ params }: any) {
-  console.log(params);
-  const res = await fetch("http://127.0.0.1:3000/api/getResume");
-  // const data = await res.json()
-  return {
-    props: {
-      data:{name: 'yqx'},
-    },
-  };
-}
-export async function getStaticPaths() {
-  return {
-    paths: [
-      { params: { child: "application" } },
-      { params: { child: "resume" } }, // See the "paths" section below
-    ],
-    fallback: true,
-  };
-}
+// export async function getStaticProps({ params }: any) {
+//   console.log(params);
+//   const res = await fetch("http://127.0.0.1:3000/api/getResume");
+//   // const data = await res.json()
+//   return {
+//     props: {
+//       data:{name: 'yqx'},
+//     },
+//   };
+// }
+// export async function getStaticPaths() {
+//   return {
+//     paths: [
+//       { params: { child: "application" } },
+//       { params: { child: "resume" } }, // See the "paths" section below
+//     ],
+//     fallback: true,
+//   };
+// }
 export default Personal;
