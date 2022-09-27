@@ -5,10 +5,9 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Resume from "@/components/Resume";
 import Application from "@/components/Application";
-import axios from "axios";
-const Personal = ({ data }: any) => {
+const Personal = ({ data, module }: any) => {
+  console.log("data: ", data);
   const router = useRouter();
-  const { child } = router.query;
   const [activeKey, setActiveKey] = useState("1");
   useEffect(() => {
     let admin_token = getLocalStorage("admin_token");
@@ -17,8 +16,8 @@ const Personal = ({ data }: any) => {
     }
   });
   useEffect(() => {
-    child === "application" ? setActiveKey("1") : setActiveKey("2");
-  }, [child]);
+    module === "application" ? setActiveKey("1") : setActiveKey("2");
+  }, [module]);
   let items = [
     {
       label: "我的进度",
@@ -28,7 +27,7 @@ const Personal = ({ data }: any) => {
     {
       label: "我的简历",
       key: "2",
-      children: <Resume />,
+      children: <Resume resumeData={data} />,
     },
   ];
   const onChange = (key: string) => {
@@ -58,23 +57,38 @@ const Personal = ({ data }: any) => {
     </div>
   );
 };
-// export async function getStaticProps({ params }: any) {
-//   console.log(params);
-//   const res = await fetch("http://127.0.0.1:3000/api/getResume");
-//   // const data = await res.json()
-//   return {
-//     props: {
-//       data:{name: 'yqx'},
-//     },
-//   };
-// }
-// export async function getStaticPaths() {
-//   return {
-//     paths: [
-//       { params: { child: "application" } },
-//       { params: { child: "resume" } }, // See the "paths" section below
-//     ],
-//     fallback: true,
-//   };
-// }
+export async function getStaticProps({ params }: any) {
+  if (params.module === "resume") {
+    const res = await fetch("http://127.0.0.1:3000/api/getResume");
+    const resumeData = await res.json();
+    return {
+      props: {
+        data: resumeData,
+        module: params.module,
+      },
+    };
+  } else {
+    return {
+      props: {
+        data: {},
+        module: params.module,
+      },
+    };
+  }
+}
+export async function getStaticPaths() {
+  let modules = ["application", "resume"],
+    paths = modules.map((module) => {
+      return {
+        params: {
+          module,
+        },
+      };
+    });
+
+  return {
+    paths,
+    fallback: false,
+  };
+}
 export default Personal;

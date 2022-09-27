@@ -1,12 +1,11 @@
 import { NextPage } from "next";
 import styles from "./login.module.scss";
-import { Button, Checkbox, Form, Input } from "antd";
+import { Button, Form, Input } from "antd";
 import { login } from "@/api/user";
 import { setLocalStorage } from "@/utils/auth";
 import { useRouter } from "next/router";
 const Login: NextPage = () => {
   const router = useRouter();
-
   const onFinish = (values: any) => {
     login({
       email: values.email,
@@ -19,7 +18,7 @@ const Login: NextPage = () => {
           let data = res.data.data;
           setLocalStorage("token_type", data.token_type);
           setLocalStorage("admin_token", data.access_token);
-          router.push("/personal");
+          router.push("/personal/application");
         }
       })
       .catch((err: any) => {
@@ -41,7 +40,8 @@ const Login: NextPage = () => {
           span: 16,
         }}
         initialValues={{
-          remember: true,
+          email: "3417982712@qq.com",
+          password: "200",
         }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
@@ -71,17 +71,6 @@ const Login: NextPage = () => {
           ]}
         >
           <Input.Password />
-        </Form.Item>
-
-        <Form.Item
-          name="remember"
-          valuePropName="checked"
-          wrapperCol={{
-            offset: 8,
-            span: 16,
-          }}
-        >
-          <Checkbox>Remember me</Checkbox>
         </Form.Item>
 
         <Form.Item

@@ -1,8 +1,7 @@
 import "antd/dist/antd.css";
 import "@/styles/globals.css";
-import type { AppContext, AppProps } from "next/app";
+import type { AppProps } from "next/app";
 import { Layout, ILayoutProps } from "@/components/Layout";
-import App from "next/app";
 
 function MyApp({
   Component,
@@ -18,12 +17,13 @@ function MyApp({
     </>
   );
 }
-MyApp.getInitialProps = async (context: AppContext) => {
-  const pageProps = await App.getInitialProps(context);
+export async function getStaticProps() {
   return {
-    ...pageProps,
-    navbarData: {},
-    footerData: {},
+    props: {
+      navbarData: {},
+      footerData: {},
+    },
   };
-};
+}
+
 export default MyApp;

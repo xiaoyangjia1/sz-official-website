@@ -15,7 +15,7 @@ import { InboxOutlined } from "@ant-design/icons";
 import type { UploadProps } from "antd";
 import styles from "./resume.module.scss";
 import { useState } from "react";
-const MyResume = () => {
+const MyResume = ({ resumeData }: any) => {
   const onFinish = (values: any) => {
     console.log("Success:", values);
   };
@@ -46,6 +46,19 @@ const MyResume = () => {
   return (
     <div className={styles.resumeWarp}>
       <Form
+        initialValues={{
+          name: resumeData.name,
+          sex: resumeData.sex,
+          university: resumeData.university,
+          college: resumeData.college,
+          major: resumeData.major,
+          sid: resumeData.sid,
+          phone: resumeData.phone,
+          wechat: resumeData.wechat,
+          photo: resumeData.photo,
+          learning: resumeData.learning,
+          university_life: resumeData.university_life,
+        }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         wrapperCol={{
