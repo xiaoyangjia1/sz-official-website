@@ -15,9 +15,34 @@ import { InboxOutlined } from "@ant-design/icons";
 import type { UploadProps } from "antd";
 import styles from "./resume.module.scss";
 import { useState } from "react";
-const MyResume = ({ resumeData }: any) => {
+import { submitResume } from "@/api/resume";
+import Email from "next-auth/providers/email";
+const Resume = ({ resumeData }: any) => {
   const onFinish = (values: any) => {
     console.log("Success:", values);
+    submitResume({
+      college: values.college,
+      email:values.email,
+      learning: values.learning,
+      link: values.link,
+      major: values.major,
+      name: values.name,
+      phone: values.phone,
+      sex: values.sex,
+      sid: values.sid,
+      photo: "222",
+      university: values.university,
+      university_life: values.university_life,
+      wechat: values.wechat,
+      files: "111",
+    })
+      .then((res: any) => {
+        console.log(res);
+        message.success('简历保存成功');
+      })
+      .catch((err: any) => {
+        console.log(err);
+      });
   };
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
@@ -44,7 +69,6 @@ const MyResume = ({ resumeData }: any) => {
   };
   const [bottom, setBottom] = useState(10);
   return (
-    <div className={styles.resumeWarp}>
       <Form
         initialValues={{
           name: resumeData.name,
@@ -53,10 +77,12 @@ const MyResume = ({ resumeData }: any) => {
           college: resumeData.college,
           major: resumeData.major,
           sid: resumeData.sid,
+          email: resumeData.email,
           phone: resumeData.phone,
           wechat: resumeData.wechat,
           photo: resumeData.photo,
           learning: resumeData.learning,
+          link: resumeData.link,
           university_life: resumeData.university_life,
         }}
         onFinish={onFinish}
@@ -83,11 +109,9 @@ const MyResume = ({ resumeData }: any) => {
           <Form.Item
             label="学校"
             name="university"
-            rules={[{ required: true, message: "请选择学校!" }]}
+            rules={[{ required: true, message: "请输入学校全称!" }]}
           >
-            <Select>
-              <Select.Option value="广东工业大学">广东工业大学</Select.Option>
-            </Select>
+            <Input />
           </Form.Item>
           <Form.Item
             label="学院"
@@ -97,7 +121,7 @@ const MyResume = ({ resumeData }: any) => {
             <Input />
           </Form.Item>
           <Form.Item
-            label="专业-班级"
+            label="专业"
             name="major"
             rules={[{ required: true, message: "请输入专业全称!" }]}
           >
@@ -196,7 +220,6 @@ const MyResume = ({ resumeData }: any) => {
           </div>
         </Affix>
       </Form>
-    </div>
   );
 };
-export default MyResume;
+export default Resume;

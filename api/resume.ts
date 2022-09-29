@@ -13,9 +13,11 @@ interface Resume {
   university_life: string;
   wechat: string;
   photo: string;
+  files: string;
 }
 
 export function submitResume(data: Resume) {
+  console.log(data)
   return request({
     url: "/api/auth/submitResume",
     method: "post",

@@ -15,7 +15,7 @@ export default function handler(
         sid: '3119005073'
       },
       headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NjQzMTgzNTIsImp0aSI6IjUiLCJpc3MiOiJhcHAiLCJuYmYiOjE2NjQyNzQxNTJ9.Rfj8E9hBFRuh_85wrZFFkANkdJleZzUkdkpDHrLof68`,
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NjQ0ODY0MzUsImp0aSI6IjUiLCJpc3MiOiJhcHAiLCJuYmYiOjE2NjQ0NDIyMzV9.MvawxCbzYtBvcWrogZr6r65Kq2RvT_2H-xeGYGgXELo`,
       },
     })
     .then((result: any) => {

@@ -38,7 +38,7 @@ const Personal = ({ data, module }: any) => {
     }
   };
   return (
-    <div className="personal contentCommon">
+    <>
       <Card
         title={
           <div>
@@ -54,7 +54,7 @@ const Personal = ({ data, module }: any) => {
         type="card"
         items={items}
       />
-    </div>
+    </>
   );
 };
 export async function getStaticProps({ params }: any) {
