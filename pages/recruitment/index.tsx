@@ -2,6 +2,8 @@ import { Card, Checkbox, Layout, Input, Pagination } from "antd";
 import type { CheckboxValueType } from "antd/es/checkbox/Group";
 import styles from "./recruitment.module.scss";
 import Link from "next/link";
+import { getJobsByKeyword } from "@/api/position";
+import { useState } from "react";
 
 const { Header, Sider, Content } = Layout;
 interface PositionItem {
@@ -51,8 +53,21 @@ const FilterItem = ({ title, options }: FilterInfo) => {
   );
 };
 const Recruitment = ({ filterData, jobsData }: any) => {
+  const [positionList, setPositionList] = useState(jobsData);
   const { Search } = Input;
-  const onSearch = (value: string) => console.log(value);
+  const onSearch = (value: string) => {
+    if (value === "") {
+      setPositionList(jobsData);
+    } else {
+      getJobsByKeyword(value)
+        .then((res: any) => {
+          setPositionList(res.data.data);
+        })
+        .catch((err: any) => {
+          console.log(err);
+        });
+    }
+  };
   return (
     <Layout className={styles.recruitment}>
       <Header className={styles.searchHeader}>
@@ -71,7 +86,7 @@ const Recruitment = ({ filterData, jobsData }: any) => {
           })}
         </Sider>
         <Content className={styles.positionList}>
-          {jobsData.map((el: any) => {
+          {positionList.map((el: any) => {
             return (
               <PositionItem
                 Pid={el.Pid}
