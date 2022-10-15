@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 import Resume from "@/components/Resume";
 import Application from "@/components/Application";
 const Personal = ({ data, module }: any) => {
-  console.log("data: ", data);
   const router = useRouter();
   const [activeKey, setActiveKey] = useState("1");
   useEffect(() => {
@@ -22,7 +21,7 @@ const Personal = ({ data, module }: any) => {
     {
       label: "我的进度",
       key: "1",
-      children: <Application />,
+      children: <Application applicationData={data} />,
     },
     {
       label: "我的简历",
@@ -58,23 +57,20 @@ const Personal = ({ data, module }: any) => {
   );
 };
 export async function getStaticProps({ params }: any) {
+  let data = [];
   if (params.module === "resume") {
     const res = await fetch("http://127.0.0.1:3000/api/getResume");
-    const resumeData = await res.json();
-    return {
-      props: {
-        data: resumeData,
-        module: params.module,
-      },
-    };
+    data = await res.json();
   } else {
-    return {
-      props: {
-        data: {},
-        module: params.module,
-      },
-    };
+    const res = await fetch("http://127.0.0.1:3000/api/getDeliveredJobs");
+    data = await res.json();
   }
+  return {
+    props: {
+      data,
+      module: params.module,
+    },
+  };
 }
 export async function getStaticPaths() {
   let modules = ["application", "resume"],

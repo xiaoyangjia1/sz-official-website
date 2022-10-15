@@ -2,7 +2,7 @@ import axios from "axios";
 // import { getLocalStorage } from "@/utils/auth";
 
 const service = axios.create({
-  baseURL: "http://47.115.228.82:8888", // url = base url + request url
+  baseURL: "http://47.115.228.82", // url = base url + request url
   timeout: 5000, // request timeout
 });
 service.interceptors.request.use(

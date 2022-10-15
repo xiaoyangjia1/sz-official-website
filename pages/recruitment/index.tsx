@@ -1,8 +1,8 @@
-import { Card, Checkbox, Layout, Input, Pagination } from "antd";
+import { Card, Checkbox, Layout, Input } from "antd";
 import type { CheckboxValueType } from "antd/es/checkbox/Group";
 import styles from "./recruitment.module.scss";
 import Link from "next/link";
-import { getJobsByKeyword } from "@/api/position";
+import { getJobsByKeyword, getJobsByTags } from "@/api/position";
 import { useState } from "react";
 
 const { Header, Sider, Content } = Layout;
@@ -13,17 +13,17 @@ interface PositionItem {
   Category: string;
   Desc: string;
 }
-const PositionItem = ({ Pid, Title, Batch, Category, Desc }: any) => {
+const PositionItem = ({ pid, title, batch, category, desc }: any) => {
   return (
-    <Link href={`/position/${Pid}`} target="_blank">
+    <Link href={`/position/${pid}`} target="_blank">
       <Card
-        title={<h2>{Title}</h2>}
+        title={<h2>{title}</h2>}
         extra={<span>投递截止时间：2023-9-19</span>}
       >
         <p>
-          {Batch} | {Category}
+          {batch} | {category}
         </p>
-        <p>{Desc}</p>
+        <p>{desc}</p>
       </Card>
     </Link>
   );
@@ -32,14 +32,23 @@ const PositionItem = ({ Pid, Title, Batch, Category, Desc }: any) => {
 interface FilterInfo {
   title: string;
   options: OptionsItem[];
+  onFilter: any;
 }
 interface OptionsItem {
   label: string;
   value: string;
 }
-const FilterItem = ({ title, options }: FilterInfo) => {
+const FilterItem = ({ title, options, onFilter }: FilterInfo) => {
   const onChange = (checkedValues: CheckboxValueType[]) => {
-    console.log("checked = ", checkedValues);
+    console.log("checked = ", checkedValues,checkedValues[0]);
+    getJobsByTags(checkedValues[0] as string)
+      .then((res: any) => {
+        console.log(res);
+        onFilter(res.data.data)
+      })
+      .catch((err: any) => {
+        console.log(err);
+      });
   };
   return (
     <div className="filterItem">
@@ -80,6 +89,7 @@ const Recruitment = ({ filterData, jobsData }: any) => {
               <FilterItem
                 title={el.title}
                 options={el.options}
+                onFilter={setPositionList}
                 key={el.title}
               />
             );
@@ -89,16 +99,15 @@ const Recruitment = ({ filterData, jobsData }: any) => {
           {positionList.map((el: any) => {
             return (
               <PositionItem
-                Pid={el.Pid}
-                Title={el.Title}
-                Batch={el.Batch}
-                Category={el.Category}
-                Desc={el.Desc}
-                key={el.ID}
+                pid={el.pid}
+                title={el.title}
+                batch={el.batch}
+                category={el.category}
+                desc={el.desc}
+                key={el.id}
               />
             );
           })}
-          <Pagination defaultCurrent={1} total={50} />
         </Content>
       </Layout>
     </Layout>
@@ -107,6 +116,14 @@ const Recruitment = ({ filterData, jobsData }: any) => {
 export async function getStaticProps() {
   const res = await fetch("http://127.0.0.1:3000/api/getJobs");
   const jobsData = await res.json();
+  const getAllBatch_res = await fetch("http://127.0.0.1:3000/api/getAllBatch");
+  const batchData = await getAllBatch_res.json();
+  const batch_options = batchData.map((el: any) => {
+    return {
+      label: el.name,
+      value: el.name,
+    };
+  });
   return {
     props: {
       filterData: [
@@ -119,7 +136,7 @@ export async function getStaticProps() {
         },
         {
           title: "招聘项目",
-          options: [{ label: "2023寒假招新", value: "2023寒假招新" }],
+          options: batch_options,
         },
         {
           title: "职位类别",

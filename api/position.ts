@@ -14,10 +14,19 @@ export function getPositionByID(pid: string) {
     params: { pid },
   });
 }
+
 export function getJobsByKeyword(keyword: string) {
   return request({
     url: "/api/getJobsByKeyword",
     method: "get",
     params: { keyword },
+  });
+}
+
+export function getJobsByTags(batch: string) {
+  return request({
+    url: "/api/getJobsByTags",
+    method: "get",
+    params: { batch },
   });
 }
