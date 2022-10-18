@@ -3,9 +3,12 @@ import styles from "./login.module.scss";
 import { Button, Form, Input } from "antd";
 import { login } from "@/api/user";
 import { setLocalStorage } from "@/utils/auth";
-import { useRouter } from "next/router";
+import router from "next/router";
+import { useAppDispatch } from "@/app/hooks";
+import { setToken,setEmail, selectToken } from "@/app/reducer/userSlice";
+import { store } from "@/app/store";
 const Login: NextPage = () => {
-  const router = useRouter();
+  const dispatch = useAppDispatch();
   const onFinish = (values: any) => {
     login({
       email: values.email,
@@ -16,8 +19,9 @@ const Login: NextPage = () => {
           console.log(res.data.message);
         } else {
           let data = res.data.data;
-          setLocalStorage("token_type", data.token_type);
           setLocalStorage("admin_token", data.access_token);
+          dispatch(setToken(data.access_token));
+          dispatch(setEmail(values.email));
           router.push("/personal/application");
         }
       })

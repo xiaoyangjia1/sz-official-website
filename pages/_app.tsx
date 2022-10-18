@@ -3,6 +3,8 @@ import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { Layout, ILayoutProps } from "@/components/Layout";
 import Head from "next/head";
+import { Provider } from "react-redux";
+import { store } from "@/app/store";
 function MyApp({
   Component,
   pageProps,
@@ -17,9 +19,11 @@ function MyApp({
         <meta name="description" content="数智招新官网" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Layout navbarData={navbarData} footerData={footerData}>
-        <Component {...pageProps} />
-      </Layout>
+      <Provider store={store}>
+        <Layout navbarData={navbarData} footerData={footerData}>
+          <Component {...pageProps} />
+        </Layout>
+      </Provider>
     </>
   );
 }

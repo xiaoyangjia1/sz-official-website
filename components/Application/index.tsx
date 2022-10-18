@@ -3,8 +3,7 @@ import type { ColumnsType } from "antd/es/table";
 import styles from "./application.module.scss";
 
 const Application = ({applicationData}:any) => {
-  console.log("+++++++++++")
-  console.log(applicationData)
+  // console.log(applicationData)
   const { Step } = Steps;
   interface DataType {
     key: React.Key;

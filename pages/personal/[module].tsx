@@ -1,23 +1,45 @@
 import { Card, Tabs } from "antd";
-import { getLocalStorage } from "@/utils/auth";
 import styles from "./personal.module.scss";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import router, { useRouter } from "next/router";
 import Resume from "@/components/Resume";
 import Application from "@/components/Application";
-const Personal = ({ data, module }: any) => {
-  const router = useRouter();
-  const [activeKey, setActiveKey] = useState("1");
-  useEffect(() => {
-    let admin_token = getLocalStorage("admin_token");
-    if (!admin_token) {
-      router.push("/login");
-    }
+import { NextPage } from "next";
+import { store } from "@/app/store";
+import { selectEmail, selectToken } from "@/app/reducer/userSlice";
+import useSWR from "swr";
+import { useEffect } from "react";
+const fetcher = async ({ api, token, email }: any) => {
+  const res = await fetch("/api/" + api, {
+    method: "POST",
+    body: JSON.stringify({
+      token,
+      email,
+    }),
   });
-  useEffect(() => {
-    module === "application" ? setActiveKey("1") : setActiveKey("2");
-  }, [module]);
-  let items = [
+  const data = await res.json();
+  if (res.status !== 200) {
+    throw new Error(data.message);
+  }
+  return data;
+};
+const Personal: NextPage = () => {
+  const { query } = useRouter();
+  const {module} = query;
+  const api = module === "application" ? "getDeliveredJob" : "getResume";
+  const state = store.getState();
+  const { data, error } = useSWR(
+    {
+      api,
+      token: selectToken(state),
+      email: selectEmail(state),
+    },
+    fetcher
+  );
+  if (error) return <div>{error.message}</div>;
+  if (!data) return <div>Loading...</div>;
+  console.log(data)
+  const activeKey = module === "application" ? "1" : "2";
+  const items = [
     {
       label: "我的进度",
       key: "1",
@@ -56,35 +78,5 @@ const Personal = ({ data, module }: any) => {
     </>
   );
 };
-export async function getStaticProps({ params }: any) {
-  let data = [];
-  if (params.module === "resume") {
-    const res = await fetch("http://127.0.0.1:3000/api/getResume");
-    data = await res.json();
-  } else {
-    const res = await fetch("http://127.0.0.1:3000/api/getDeliveredJobs");
-    data = await res.json();
-  }
-  return {
-    props: {
-      data,
-      module: params.module,
-    },
-  };
-}
-export async function getStaticPaths() {
-  let modules = ["application", "resume"],
-    paths = modules.map((module) => {
-      return {
-        params: {
-          module,
-        },
-      };
-    });
 
-  return {
-    paths,
-    fallback: false,
-  };
-}
 export default Personal;

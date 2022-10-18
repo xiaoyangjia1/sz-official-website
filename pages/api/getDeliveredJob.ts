@@ -1,18 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import axios from "axios";
 import request from "@/utils/request";
-type Data = {
-  name: string;
-};
-
-export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) {
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const { body } = req;
-  const { token,email } = JSON.parse(body);
+  const { token, email } = JSON.parse(body);
   request({
-    url: "/api/auth/getResume",
+    url: "/api/auth/getDeliveredJob",
     method: "get",
     params: {
       email,

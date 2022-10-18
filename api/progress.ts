@@ -1,5 +1,4 @@
 import request from "@/utils/request";
-
 interface DeliveryJob {
   pid: string;
   sid: string;
@@ -11,12 +10,12 @@ export function deliveryJob(data: DeliveryJob) {
     data,
   });
 }
-export function getDeliveredJob(sid: string) {
+export function getDeliveredJob(email: string) {
   return request({
     url: "/api/auth/getDeliveredJob",
     method: "post",
     data: {
-      sid,
+      email,
     },
   });
 }
