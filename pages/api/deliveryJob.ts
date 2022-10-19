@@ -1,13 +1,20 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import request from "@/utils/request";
+type Data = {
+  name: string;
+};
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<Data>
+) {
   const { body } = req;
-  const { token, email } = JSON.parse(body);
+  const { token, email, pid } = JSON.parse(body);
   request({
-    url: "/api/auth/getResume",
-    method: "get",
-    params: {
+    url: "/api/auth/deliveryJob",
+    method: "post",
+    data: {
+      pid,
       email,
     },
     headers: { Authorization: `Bearer ${token}` },

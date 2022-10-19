@@ -1,72 +1,106 @@
 import { Button, Card } from "antd";
-import { deliveryJob } from "@/api/progress";
 import styles from "./position.module.scss";
-const Position = ({ pid, positionData }: any) => {
-  function handleDeliveryJob() {
-    deliveryJob({
-      pid,
-      sid: "3119005073",
-    })
-      .then((res: any) => {
-        console.log(res);
-      })
-      .catch((err: any) => {
-        console.log(err);
-      });
+import { NextPage } from "next";
+import { useRouter } from "next/router";
+import { store } from "@/app/store";
+import useSWR from "swr";
+import { selectEmail, selectToken } from "@/app/reducer/userSlice";
+import { formatDate } from "@/utils/date";
+import { useState } from "react";
+const fetcher = async ({ api, token, email }: any) => {
+  const res = await fetch("/api/" + api, {
+    method: "POST",
+    body: JSON.stringify({
+      token,
+      email,
+    }),
+  });
+  const data = await res.json();
+  if (res.status !== 200) {
+    throw new Error(data.message);
   }
+  return data;
+};
+
+const Position: NextPage = () => {
+  const { query } = useRouter();
+  const { pid } = query;
+  const state = store.getState();
+  const token = selectToken(state);
+  const { data: positionData, error } = useSWR(
+    {
+      api: `getPosition/${pid}`,
+      token,
+    },
+    fetcher
+  );
+  if (error) return <div>{error.message}</div>;
+  if (!positionData) return <div>Loading...</div>;
+  const {
+    title,
+    test,
+    interview,
+    check1,
+    check2,
+    batch,
+    category,
+    desc,
+    requirements,
+  } = positionData;
+  const created_at = formatDate(positionData.created_at);
+  const deadline = formatDate(positionData.deadline);
+  const [disabled, setDisabled] = useState(false);
+  const handleDeliveryJob = async () => {
+    const email = selectEmail(state);
+    const res = await fetch("/api/deliveryJob", {
+      method: "POST",
+      body: JSON.stringify({
+        token,
+        email,
+        pid,
+      }),
+    });
+    if (res.status === 200) {
+      setDisabled(true);
+    }
+  };
   return (
     <div className={styles.position}>
       <Card
-        title={<h3>{positionData.Title}</h3>}
+        title={<h3>{title}</h3>}
         extra={
-          <Button type="primary" onClick={handleDeliveryJob}>
-            投递简历
+          <Button
+            type="primary"
+            disabled={disabled}
+            onClick={handleDeliveryJob}
+          >
+            {disabled ? "已投递" : "投递简历"}
           </Button>
         }
       ></Card>
       <Card title={<h3>基础信息</h3>}>
         <p>
-          <span>发布时间：2023-9-12</span>
-          <span>截止时间：2023-9-23</span>
+          <span>发布时间：{created_at}</span>
+          <span>截止时间：{deadline}</span>
         </p>
-        <p>流程：笔试-面试-一轮考核-二轮考核-offer</p>
         <p>
-          <span>招新批次：2023寒假招新</span>
-          <span>所属类别：研发-前端</span>
+          流程：投递简历、{test ? "笔试、" : null}
+          {interview ? "面试、" : null}
+          {check1 ? "一轮考核、" : null}
+          {check2 ? "二轮考核、" : null}offer
+        </p>
+        <p>
+          <span>招新批次：{batch}</span>
+          <span>所属类别：研发-{category}</span>
         </p>
         <p>
           <span>招新院校：广东工业大学</span>
           <span>招新对象：大一、大二</span>
         </p>
       </Card>
-      <Card title={<h3>职位描述</h3>}>{positionData.Desc}</Card>
-      <Card title={<h3>职位要求</h3>}>{positionData.Requirements}</Card>
+      <Card title={<h3>职位描述</h3>}>{desc}</Card>
+      <Card title={<h3>职位要求</h3>}>{requirements}</Card>
     </div>
   );
 };
-export async function getStaticProps({ params }: any) {
-  const res = await fetch("http://127.0.0.1:3000/api/getPositionByID");
-  const positionData = await res.json();
-  return {
-    props: {
-      positionData,
-      pid: params.pid,
-    },
-  };
-}
-export async function getStaticPaths() {
-  let pidList = ["SZ2023FE"],
-    paths = pidList.map((pid) => {
-      return {
-        params: {
-          pid,
-        },
-      };
-    });
-
-  return {
-    paths,
-    fallback: false,
-  };
-}
 export default Position;

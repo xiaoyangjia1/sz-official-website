@@ -7,7 +7,6 @@ import { NextPage } from "next";
 import { store } from "@/app/store";
 import { selectEmail, selectToken } from "@/app/reducer/userSlice";
 import useSWR from "swr";
-import { useEffect } from "react";
 const fetcher = async ({ api, token, email }: any) => {
   const res = await fetch("/api/" + api, {
     method: "POST",
