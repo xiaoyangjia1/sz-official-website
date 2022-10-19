@@ -23,6 +23,7 @@ const fetcher = async ({ api, token, email }: any) => {
 };
 
 const Position: NextPage = () => {
+  const [disabled, setDisabled] = useState(false);
   const { query } = useRouter();
   const { pid } = query;
   const state = store.getState();
@@ -49,7 +50,6 @@ const Position: NextPage = () => {
   } = positionData;
   const created_at = formatDate(positionData.created_at);
   const deadline = formatDate(positionData.deadline);
-  const [disabled, setDisabled] = useState(false);
   const handleDeliveryJob = async () => {
     const email = selectEmail(state);
     const res = await fetch("/api/deliveryJob", {

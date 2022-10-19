@@ -36,7 +36,6 @@ const Personal: NextPage = () => {
   );
   if (error) return <div>{error.message}</div>;
   if (!data) return <div>Loading...</div>;
-  console.log(data)
   const activeKey = module === "application" ? "1" : "2";
   const items = [
     {
