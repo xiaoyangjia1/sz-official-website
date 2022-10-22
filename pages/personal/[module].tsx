@@ -4,51 +4,34 @@ import router, { useRouter } from "next/router";
 import Resume from "@/components/Resume";
 import Application from "@/components/Application";
 import { NextPage } from "next";
-import { store } from "@/app/store";
-import { selectEmail, selectToken } from "@/app/reducer/userSlice";
 import useSWR from "swr";
-const fetcher = async ({ token, email }: any) => {
-  const res1 = await fetch("/api/getDeliveredJob", {
-    method: "POST",
-    body: JSON.stringify({
-      token,
-      email,
-    }),
-  });
-  const res2 = await fetch("/api/getResume", {
-    method: "POST",
-    body: JSON.stringify({
-      token,
-      email,
-    }),
-  });
-  const applicationData = await res1.json();
-  const resumeData = await res2.json();
-  if (res1.status !== 200) {
-    throw new Error(applicationData.message);
-  }
-  if (res2.status !== 200) {
-    throw new Error(resumeData.message);
-  }
-  return {
-    applicationData,
-    resumeData,
-  };
-};
-const Personal: NextPage = () => {
-  const state = store.getState();
-  const { data, error } = useSWR(
-    {
-      token: selectToken(state),
-      email: selectEmail(state),
-    },
-    fetcher
-  );
 
-  if (error) return <div>{error.message}</div>;
-  if (!data) return <div>Loading...</div>;
-  const { applicationData, resumeData } = data;
+const Personal: NextPage = () => {
   const { query } = useRouter();
+  const { data: applicationData, error:err1 } = useSWR(
+    "/api/getDeliveredJob",
+    async(api)=>{
+      const res = await fetch(api);
+      const data = await res.json();
+      if (res.status !== 200) {
+        throw new Error(data.message);
+      }
+      return data
+    }
+  );
+  const { data: resumeData, error:err2 } = useSWR(
+    "/api/getResume",
+    async(api)=>{
+      const res = await fetch(api);
+      const data = await res.json();
+      if (res.status !== 200) {
+        throw new Error(data.message);
+      }
+      return data
+    }
+  );
+  if (err1||err2) return <div>{err1}{err2}</div>;
+  if (!applicationData||!resumeData) return <div>Loading...</div>;
   const { module } = query;
   const activeKey = module === "application" ? "1" : "2";
   const items = [

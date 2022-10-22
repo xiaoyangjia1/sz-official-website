@@ -1,20 +1,22 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import request from "@/utils/request";
-import { getCookie } from "@/utils/cookie";
+import { getCookie, removeCookie, setCookie } from "@/utils/cookie";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  const token = getCookie(req, "token");
-  const email = getCookie(req, "email");
+  const { body } = req;
+  const { email, password } = JSON.parse(body);
   request({
-    url: "/api/auth/getResume",
-    method: "get",
-    params: {
+    url: "/api/auth/login",
+    method: "post",
+    data: {
       email,
+      password,
     },
-    headers: { Authorization: `Bearer ${token}` },
   })
     .then((result: any) => {
       console.log(result.data.data);
+      setCookie(res, "token", result.data.data.access_token);
+      setCookie(res, "email", email);
       res.status(200).json(result.data.data);
     })
     .catch((err: any) => {

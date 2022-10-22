@@ -1,15 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import request from "@/utils/request";
-type Data = {
-  name: string;
-};
+import { getCookie } from "@/utils/cookie";
 
-export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) {
-  const { body, query } = req;
-  const { token } = JSON.parse(body);
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  const token = getCookie(req, "token");
+  const { query } = req;
   const { pid } = query;
   request({
     url: "/api/getPosition",

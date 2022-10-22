@@ -1,15 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import request from "@/utils/request";
-type Data = {
-  name: string;
-};
+import { getCookie } from "@/utils/cookie";
 
 export default function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse
 ) {
+  const token = getCookie(req, "token");
+  const email = getCookie(req, "email");
   const { body } = req;
-  const { token, email, pid } = JSON.parse(body);
+  const { pid } = JSON.parse(body);
   request({
     url: "/api/auth/deliveryJob",
     method: "post",

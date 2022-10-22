@@ -1,10 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import request from "@/utils/request";
+import { getCookie } from "@/utils/cookie";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { body } = req;
-  const { token, email,pid } = JSON.parse(body);
-  console.log(pid)
+  const token = getCookie(req, "token");
+  const email = getCookie(req, "email");
+  const { query } = req;
+  const { pid } = query;
   request({
     url: "/api/auth/queryIsDelivered",
     method: "get",

@@ -1,8 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import request from "@/utils/request";
+import { getCookie } from "@/utils/cookie";
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { body } = req;
-  const { token, email } = JSON.parse(body);
+  const token = getCookie(req, "token");
+  const email = getCookie(req, "email");
   request({
     url: "/api/auth/getDeliveredJob",
     method: "get",

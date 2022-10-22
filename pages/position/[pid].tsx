@@ -2,56 +2,35 @@ import { Button, Card } from "antd";
 import styles from "./position.module.scss";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import { store } from "@/app/store";
 import useSWR from "swr";
-import { selectEmail, selectToken } from "@/app/reducer/userSlice";
 import { formatDate } from "@/utils/date";
 import { useState } from "react";
+import { fetcher } from "@/utils/fetcher";
 
 const Position: NextPage = () => {
   const [disabled, setDisabled] = useState(false);
   const { query } = useRouter();
   const { pid } = query;
-  const state = store.getState();
-  const token = selectToken(state);
-  const email = selectEmail(state);
-  const fetcher = async ({ pid, email, token }: any) => {
-    const res1 = await fetch(`/api/getPosition/${pid}`, {
-      method: "POST",
-      body: JSON.stringify({
-        token,
-      }),
-    });
-    const res2 = await fetch("/api/queryIsDelivered", {
-      method: "POST",
-      body: JSON.stringify({
-        token,
-        email,
-        pid,
-      }),
-    });
-    const positionData = await res1.json();
-    const queryData = await res2.json();
-    if (res1.status !== 200) {
-      throw new Error(positionData.message);
-    }
-    if (res2.status !== 200) {
-      throw new Error(queryData.message);
-    }
-    setDisabled(!!queryData);
-    return { positionData, queryData };
-  };
-  const { data, error } = useSWR(
-    {
-      pid,
-      email,
-      token,
-    },
+  const { data: positionData, error: err1 } = useSWR(
+    `/api/getPosition/${pid}`,
     fetcher
   );
-  if (error) return <div>{error.message}</div>;
-  if (!data) return <div>Loading...</div>;
-  const { positionData, queryData } = data;
+  const { data: queryData, error: err2 } = useSWR(
+    `/api/queryIsDelivered/${pid}`,
+    async (api) => {
+      const data = await fetcher(api);
+      setDisabled(!!data);
+      return data
+    }
+  );
+  if (err1 || err2)
+    return (
+      <div>
+        {err1?.message}
+        {err2?.message}
+      </div>
+    );
+  if (!positionData || !queryData) return <div>Loading...</div>;
   const {
     title,
     test,
@@ -69,8 +48,6 @@ const Position: NextPage = () => {
     const res = await fetch("/api/deliveryJob", {
       method: "POST",
       body: JSON.stringify({
-        token,
-        email,
         pid,
       }),
     });

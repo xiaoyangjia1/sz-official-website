@@ -1,33 +1,19 @@
 import { NextPage } from "next";
 import styles from "./login.module.scss";
 import { Button, Form, Input } from "antd";
-import { login } from "@/api/user";
-import { setLocalStorage } from "@/utils/auth";
 import router from "next/router";
-import { useAppDispatch } from "@/app/hooks";
-import { setToken,setEmail, selectToken } from "@/app/reducer/userSlice";
-import { store } from "@/app/store";
 const Login: NextPage = () => {
-  const dispatch = useAppDispatch();
-  const onFinish = (values: any) => {
-    login({
-      email: values.email,
-      password: values.password,
-    })
-      .then((res: any) => {
-        if (res.data.error_code > 0) {
-          console.log(res.data.message);
-        } else {
-          let data = res.data.data;
-          setLocalStorage("admin_token", data.access_token);
-          dispatch(setToken(data.access_token));
-          dispatch(setEmail(values.email));
-          router.push("/personal/application");
-        }
-      })
-      .catch((err: any) => {
-        console.log(err);
-      });
+  const onFinish = async (values: any) => {
+    const res = await fetch("/api/login", {
+      method: "POST",
+      body: JSON.stringify({
+        email: values.email,
+        password: values.password,
+      }),
+    });
+    if (res.status === 200) {
+      router.push("/personal/application");
+    }
   };
 
   const onFinishFailed = (errorInfo: any) => {
