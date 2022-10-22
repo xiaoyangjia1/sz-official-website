@@ -7,46 +7,60 @@ import { NextPage } from "next";
 import { store } from "@/app/store";
 import { selectEmail, selectToken } from "@/app/reducer/userSlice";
 import useSWR from "swr";
-const fetcher = async ({ api, token, email }: any) => {
-  const res = await fetch("/api/" + api, {
+const fetcher = async ({ token, email }: any) => {
+  const res1 = await fetch("/api/getDeliveredJob", {
     method: "POST",
     body: JSON.stringify({
       token,
       email,
     }),
   });
-  const data = await res.json();
-  if (res.status !== 200) {
-    throw new Error(data.message);
+  const res2 = await fetch("/api/getResume", {
+    method: "POST",
+    body: JSON.stringify({
+      token,
+      email,
+    }),
+  });
+  const applicationData = await res1.json();
+  const resumeData = await res2.json();
+  if (res1.status !== 200) {
+    throw new Error(applicationData.message);
   }
-  return data;
+  if (res2.status !== 200) {
+    throw new Error(resumeData.message);
+  }
+  return {
+    applicationData,
+    resumeData,
+  };
 };
 const Personal: NextPage = () => {
-  const { query } = useRouter();
-  const {module} = query;
-  const api = module === "application" ? "getDeliveredJob" : "getResume";
   const state = store.getState();
   const { data, error } = useSWR(
     {
-      api,
       token: selectToken(state),
       email: selectEmail(state),
     },
     fetcher
   );
+
   if (error) return <div>{error.message}</div>;
   if (!data) return <div>Loading...</div>;
+  const { applicationData, resumeData } = data;
+  const { query } = useRouter();
+  const { module } = query;
   const activeKey = module === "application" ? "1" : "2";
   const items = [
     {
       label: "我的进度",
       key: "1",
-      children: <Application applicationData={data} />,
+      children: <Application applicationData={applicationData} />,
     },
     {
       label: "我的简历",
       key: "2",
-      children: <Resume resumeData={data} />,
+      children: <Resume resumeData={resumeData} />,
     },
   ];
   const onChange = (key: string) => {

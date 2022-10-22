@@ -7,20 +7,6 @@ import useSWR from "swr";
 import { selectEmail, selectToken } from "@/app/reducer/userSlice";
 import { formatDate } from "@/utils/date";
 import { useState } from "react";
-const fetcher = async ({ api, token, email }: any) => {
-  const res = await fetch("/api/" + api, {
-    method: "POST",
-    body: JSON.stringify({
-      token,
-      email,
-    }),
-  });
-  const data = await res.json();
-  if (res.status !== 200) {
-    throw new Error(data.message);
-  }
-  return data;
-};
 
 const Position: NextPage = () => {
   const [disabled, setDisabled] = useState(false);
@@ -28,15 +14,44 @@ const Position: NextPage = () => {
   const { pid } = query;
   const state = store.getState();
   const token = selectToken(state);
-  const { data: positionData, error } = useSWR(
+  const email = selectEmail(state);
+  const fetcher = async ({ pid, email, token }: any) => {
+    const res1 = await fetch(`/api/getPosition/${pid}`, {
+      method: "POST",
+      body: JSON.stringify({
+        token,
+      }),
+    });
+    const res2 = await fetch("/api/queryIsDelivered", {
+      method: "POST",
+      body: JSON.stringify({
+        token,
+        email,
+        pid,
+      }),
+    });
+    const positionData = await res1.json();
+    const queryData = await res2.json();
+    if (res1.status !== 200) {
+      throw new Error(positionData.message);
+    }
+    if (res2.status !== 200) {
+      throw new Error(queryData.message);
+    }
+    setDisabled(!!queryData);
+    return { positionData, queryData };
+  };
+  const { data, error } = useSWR(
     {
-      api: `getPosition/${pid}`,
+      pid,
+      email,
       token,
     },
     fetcher
   );
   if (error) return <div>{error.message}</div>;
-  if (!positionData) return <div>Loading...</div>;
+  if (!data) return <div>Loading...</div>;
+  const { positionData, queryData } = data;
   const {
     title,
     test,
@@ -51,7 +66,6 @@ const Position: NextPage = () => {
   const created_at = formatDate(positionData.created_at);
   const deadline = formatDate(positionData.deadline);
   const handleDeliveryJob = async () => {
-    const email = selectEmail(state);
     const res = await fetch("/api/deliveryJob", {
       method: "POST",
       body: JSON.stringify({

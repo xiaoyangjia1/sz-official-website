@@ -6,7 +6,7 @@ import styles from "./application.module.scss";
 const getState = (state: number) => {
   return state === 1 ? "wait" : state === 2 ? "finish" : "error";
 };
-const Application: NextComponentType = ({ applicationData }: any) => {
+const Application = ({ applicationData }: any) => {
   console.log(applicationData);
   const { Step } = Steps;
   interface DataType {
@@ -59,7 +59,7 @@ const Application: NextComponentType = ({ applicationData }: any) => {
           columns={columns}
           expandable={{
             expandedRowRender: (record) => (
-              <p style={{ margin: 0 }}>{record.step}</p>
+              <div style={{ margin: 0 }}>{record.step}</div>
             ),
           }}
           dataSource={data}
