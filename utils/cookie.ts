@@ -6,7 +6,8 @@ export const setCookie = (
   value: any,
   options: CookieSerializeOptions = {}
 ) => {
-  const MAX_AGE = 60 * 60 * 24 * 60; // 60 天
+  console.log(name, value);
+  const MAX_AGE = 60 * 60 * 24 * 1; 
   const cookie = serialize(name, value, {
     maxAge: MAX_AGE,
     expires: new Date(Date.now() + MAX_AGE * 1000),
@@ -26,10 +27,7 @@ export function getCookie(req: NextApiRequest, name: string) {
   const cookies = parseCookies(req);
   return cookies[name];
 }
-export function removeCookie(
-  res: NextApiResponse,
-  name: string
-) {
+export function removeCookie(res: NextApiResponse, name: string) {
   const cookie = serialize(name, "", {
     maxAge: -1,
     path: "/",

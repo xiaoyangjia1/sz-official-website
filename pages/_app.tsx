@@ -1,16 +1,11 @@
 import "antd/dist/antd.css";
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
-import { Layout, ILayoutProps } from "@/components/Layout";
+import { Layout } from "@/components/Layout";
 import Head from "next/head";
 import { Provider } from "react-redux";
 import { store } from "@/app/store";
-function MyApp({
-  Component,
-  pageProps,
-  navbarData,
-  footerData,
-}: AppProps & ILayoutProps) {
+function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
@@ -20,20 +15,11 @@ function MyApp({
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Provider store={store}>
-        <Layout navbarData={navbarData} footerData={footerData}>
+        <Layout>
           <Component {...pageProps} />
         </Layout>
       </Provider>
     </>
   );
 }
-export async function getStaticProps() {
-  return {
-    props: {
-      navbarData: {},
-      footerData: {},
-    },
-  };
-}
-
 export default MyApp;

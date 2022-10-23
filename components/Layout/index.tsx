@@ -1,17 +1,17 @@
-import Navbar, { INavBarProps } from "./Navbar";
-import Footer, { IFooterProps } from "./Footer";
+import Navbar from "./Navbar";
+import Footer from "./Footer";
 import styles from "./layout.module.scss";
-export interface ILayoutProps {
-  navbarData: INavBarProps;
-  footerData: IFooterProps;
+import useSWR from "swr";
+import { fetcher } from "@/utils/fetcher";
+interface ILayoutProps {
   children: JSX.Element;
 }
-export const Layout = ({ children, navbarData, footerData }: ILayoutProps) => {
+export const Layout = ({ children }: ILayoutProps) => {
   return (
     <>
-      <Navbar {...navbarData} />
+      <Navbar/>
       <main className={styles.main}>{children}</main>
-      <Footer {...footerData} />
+      <Footer />
     </>
   );
 };
