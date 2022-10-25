@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import request from "@/utils/request";
-import { setCookie } from "@/utils/cookie";
-
+import { setCookie } from "cookies-next";
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -9,20 +8,38 @@ export default async function handler(
   const { body } = req;
   const { email, password } = JSON.parse(body);
   const { data: result } = await request({
-    url: "/api/auth/login",
+    url: "/api/login",
     method: "post",
     data: {
       email,
       password,
     },
   });
-  console.log(result);
   const { error_code, data, message } = result;
   if (error_code) {
     res.status(error_code).json({ message });
   } else {
-    setCookie(res, "email", email);
-    setCookie(res, "access_token", data.access_token);
+    const MAX_AGE = 60 * 60 * 24 * 1;
+    setCookie("access_token", data.access_token, {
+      req,
+      res,
+      maxAge: MAX_AGE,
+      expires: new Date(Date.now() + MAX_AGE * 1000),
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      sameSite: "lax",
+    });
+    setCookie("email", email, {
+      req,
+      res,
+      maxAge: MAX_AGE,
+      expires: new Date(Date.now() + MAX_AGE * 1000),
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      sameSite: "lax",
+    });
     res.status(200).json(data);
   }
 }

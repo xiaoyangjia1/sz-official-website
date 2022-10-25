@@ -5,13 +5,13 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const result = await request({
+  const { data: result } = await request({
     url: "/api/getAllCategory",
     method: "get",
   });
-  const { data } = result.data;
-  if (data.error_code) {
-    res.status(data.error_code).json(data.message);
+  const { error_code, data, message } = result;
+  if (error_code) {
+    res.status(error_code).json({ message });
   } else {
     res.status(200).json(data);
   }

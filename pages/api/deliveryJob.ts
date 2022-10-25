@@ -1,16 +1,20 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import request from "@/utils/request";
-import { getCookie } from "@/utils/cookie";
+import { getCookie } from "cookies-next";
 
-export default function handler(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const token = getCookie(req, "token");
-  const email = getCookie(req, "email");
+  const token = getCookie("access_token", { req, res });
+  if (!token) {
+    res.status(401).json({message: '用户未登录'});
+    return 
+  }
+  const email = getCookie("email", { req, res });
   const { body } = req;
   const { pid } = JSON.parse(body);
-  request({
+  const { data: result } = await request({
     url: "/api/auth/deliveryJob",
     method: "post",
     data: {
@@ -18,12 +22,11 @@ export default function handler(
       email,
     },
     headers: { Authorization: `Bearer ${token}` },
-  })
-    .then((result: any) => {
-      console.log(result.data.data);
-      res.status(200).json(result.data.data);
-    })
-    .catch((err: any) => {
-      console.log(err);
-    });
+  });
+  const { error_code, data, message } = result;
+  if (error_code) {
+    res.status(error_code).json({ message });
+  } else {
+    res.status(200).json(data);
+  }
 }

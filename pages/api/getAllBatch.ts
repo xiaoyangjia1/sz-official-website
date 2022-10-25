@@ -1,18 +1,21 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getAllBatch } from "@/api/batch";
+import request from "@/utils/request";
 type Data = {
   name: string;
 };
 
-export default function handler(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-    getAllBatch()
-    .then((result: any) => {
-      res.status(200).json(result.data.data);
-    })
-    .catch((err: any) => {
-      console.log(err);
-    });
+  const { data: result } = await request({
+    url: "/api/getAllBatch",
+    method: "get",
+  });
+  const { error_code, data, message } = result;
+  if (error_code) {
+    res.status(error_code).json({ message });
+  } else {
+    res.status(200).json(data);
+  }
 }

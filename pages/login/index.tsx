@@ -2,8 +2,10 @@ import { NextPage } from "next";
 import styles from "./login.module.scss";
 import { Button, Form, Input } from "antd";
 import router from "next/router";
+import Link from "next/link";
+import { getCookies, setCookie, deleteCookie } from 'cookies-next';
 const Login: NextPage = () => {
-  const onFinish = async (values: any) => {
+  const onLogin = async (values: any) => {
     const res = await fetch("/api/login", {
       method: "POST",
       body: JSON.stringify({
@@ -15,8 +17,7 @@ const Login: NextPage = () => {
       router.push("/personal/application");
     }
   };
-
-  const onFinishFailed = (errorInfo: any) => {
+  const onLoginFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
   return (
@@ -33,8 +34,8 @@ const Login: NextPage = () => {
           email: "3417982712@qq.com",
           password: "200",
         }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
+        onFinish={onLogin}
+        onFinishFailed={onLoginFailed}
         autoComplete="off"
       >
         <Form.Item
@@ -74,6 +75,10 @@ const Login: NextPage = () => {
           </Button>
         </Form.Item>
       </Form>
+      没有邮箱账号？
+      <Link href={`/register`}>
+        <Button type="link">创建账号</Button>
+      </Link>
     </div>
   );
 };

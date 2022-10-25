@@ -1,16 +1,15 @@
 import { Button, Card } from "antd";
 import styles from "./position.module.scss";
 import { NextPage } from "next";
-import { useRouter } from "next/router";
+import  { useRouter } from "next/router";
 import useSWR from "swr";
 import { formatDate } from "@/utils/date";
 import { useState } from "react";
 import { fetcher } from "@/utils/fetcher";
-
 const Position: NextPage = () => {
   const [disabled, setDisabled] = useState(false);
-  const { query } = useRouter();
-  const { pid } = query;
+  const router = useRouter();
+  const { pid } = router.query;
   const { data: positionData, error: err1 } = useSWR(
     `/api/getPosition/${pid}`,
     fetcher
@@ -19,7 +18,7 @@ const Position: NextPage = () => {
     `/api/queryIsDelivered/${pid}`,
     async (api) => {
       const data = await fetcher(api);
-      setDisabled(!!data);
+      setDisabled(data.disabled);
       return data
     }
   );
@@ -51,6 +50,9 @@ const Position: NextPage = () => {
         pid,
       }),
     });
+    if (res.status === 401) {
+      router.push('/login')
+    }
     if (res.status === 200) {
       setDisabled(true);
     }
