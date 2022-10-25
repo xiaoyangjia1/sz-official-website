@@ -1,4 +1,12 @@
-import { Card, Checkbox, Layout, Input, Divider } from "antd";
+import {
+  Card,
+  Checkbox,
+  Layout,
+  Input,
+  Divider,
+  Pagination,
+  PaginationProps,
+} from "antd";
 import type { CheckboxValueType } from "antd/es/checkbox/Group";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import styles from "./recruitment.module.scss";
@@ -73,7 +81,11 @@ const MultilevelFilterItem = ({ title, options, onFilter }: FilterInfo) => {
     useState<CheckboxValueType[][]>(defaultCheckedList);
   const [indeterminate, setIndeterminate] = useState<boolean>(true);
   const [checkAll, setCheckAll] = useState<boolean[]>([false]);
-  const onChange = (list: CheckboxValueType[], options: OptionsItem[], index: number) => {
+  const onChange = (
+    list: CheckboxValueType[],
+    options: OptionsItem[],
+    index: number
+  ) => {
     const newCheckedList = JSON.parse(JSON.stringify(checkedList));
     const newCheckAll = JSON.parse(JSON.stringify(checkAll));
     newCheckedList[index] = list;
@@ -84,7 +96,11 @@ const MultilevelFilterItem = ({ title, options, onFilter }: FilterInfo) => {
     setCheckAll(newCheckAll);
   };
 
-  const onCheckAllChange = (e: CheckboxChangeEvent, options: OptionsItem[], index: number) => {
+  const onCheckAllChange = (
+    e: CheckboxChangeEvent,
+    options: OptionsItem[],
+    index: number
+  ) => {
     const newCheckedList = JSON.parse(JSON.stringify(checkedList));
     const newCheckAll = JSON.parse(JSON.stringify(checkAll));
     newCheckedList[index] = e.target.checked
@@ -135,8 +151,9 @@ const Recruitment: NextPage = ({ filterData, jobsData }: any) => {
     const filterRes = jobsData.filter((el: Position) => {
       const { batch, category } = el;
       return (
-        (batchFilterList.length===0 || batchFilterList.includes(batch)) &&
-        (categoryFilterList.length===0 || categoryFilterList.includes(category))
+        (batchFilterList.length === 0 || batchFilterList.includes(batch)) &&
+        (categoryFilterList.length === 0 ||
+          categoryFilterList.includes(category))
       );
     });
     setPositionList(filterRes);
@@ -151,6 +168,10 @@ const Recruitment: NextPage = ({ filterData, jobsData }: any) => {
             return str.includes(value);
           });
     setPositionList(res);
+  };
+  const onChange: PaginationProps['onChange'] = pageNumber => {
+    const beginIndex=(pageNumber-1)*5
+    setPositionList(jobsData.slice(beginIndex,beginIndex+5))
   };
   return (
     <Layout className={styles.recruitment}>
@@ -178,9 +199,15 @@ const Recruitment: NextPage = ({ filterData, jobsData }: any) => {
           })}
         </Sider>
         <Content className={styles.positionList}>
-          {positionList.map((el: any) => {
+          {positionList.map((el: Position) => {
             return <PositionItem position={el} key={el.id} />;
           })}
+          <Pagination
+            onChange={onChange}
+            pageSize={5}
+            defaultCurrent={1}
+            total={6}
+          />
         </Content>
       </Layout>
     </Layout>
