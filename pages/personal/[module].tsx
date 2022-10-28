@@ -1,4 +1,4 @@
-import { Card, Tabs } from "antd";
+import { Card, Spin, Tabs } from "antd";
 import styles from "./personal.module.scss";
 import { useRouter } from "next/router";
 import Resume from "@/components/Resume";
@@ -16,7 +16,7 @@ const Personal: NextPage = () => {
       const data = await res.json();
       if (res.status !== 200) {
         router.push("/login");
-        return 
+        return;
       }
       return data;
     }
@@ -30,7 +30,12 @@ const Personal: NextPage = () => {
     }
     return data;
   });
-  if (!applicationData || !resumeData) return <div>Loading...</div>;
+  if (!applicationData || !resumeData)
+    return (
+      <div className="pageWarp">
+        <Spin size="large" />
+      </div>
+    );
   const { module } = query;
   const activeKey = module === "application" ? "1" : "2";
   const items = [
@@ -53,15 +58,12 @@ const Personal: NextPage = () => {
     }
   };
   return (
-    <>
-      <Card
-        title={
-          <div>
-            <p> Hi,qx</p>
-            <p>欢迎参加数智工作室校园招新</p>
-          </div>
-        }
-      ></Card>
+    <div className={styles.personalWarp}>
+      <Card style={{ marginBottom: "20px" }}>
+        <div>
+          <p>Hi,欢迎参加数智工作室校园招新</p>
+        </div>
+      </Card>
       <Tabs
         onChange={onChange}
         activeKey={activeKey}
@@ -69,7 +71,7 @@ const Personal: NextPage = () => {
         type="card"
         items={items}
       />
-    </>
+    </div>
   );
 };
 

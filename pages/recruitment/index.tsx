@@ -52,6 +52,7 @@ const PositionItem = ({ position }: any) => {
   return (
     <Link href={`/position/${pid}`} target="_blank">
       <Card
+        style={{ marginBottom: "0px" }}
         title={<h2>{title}</h2>}
         extra={<span>投递截止时间：2023-9-19</span>}
       >
@@ -65,7 +66,7 @@ const PositionItem = ({ position }: any) => {
 };
 const FilterItem = ({ title, options, onFilter }: FilterInfo) => {
   return (
-    <div className="filterItem">
+    <div className={styles.filterItem}>
       <h2>{title}</h2>
       <Checkbox.Group
         options={options as OptionsItem[]}
@@ -145,8 +146,11 @@ const MultilevelFilterItem = ({ title, options, onFilter }: FilterInfo) => {
 };
 const Recruitment: NextPage = ({ filterData, jobsData }: any) => {
   const [positionList, setPositionList] = useState<Position[]>(jobsData);
+  const [filterList, setFilterList] = useState<Position[]>(jobsData);
+
   const [categoryFilterList, setCategoryFilterList] = useState<string[]>([]);
   const [batchFilterList, setBatchFilterList] = useState<string[]>([]);
+  const [total, setTotal] = useState<number>(jobsData.length);
   useEffect(() => {
     const filterRes = jobsData.filter((el: Position) => {
       const { batch, category } = el;
@@ -156,8 +160,10 @@ const Recruitment: NextPage = ({ filterData, jobsData }: any) => {
           categoryFilterList.includes(category))
       );
     });
-    setPositionList(filterRes);
-  }, [batchFilterList, categoryFilterList]);
+    setFilterList(filterRes);
+    setPositionList(filterRes.slice(0, 5));
+    setTotal(filterRes.length);
+  }, [jobsData, batchFilterList, categoryFilterList]);
   const onSearch = (value: string) => {
     const res =
       value === ""
@@ -169,9 +175,9 @@ const Recruitment: NextPage = ({ filterData, jobsData }: any) => {
           });
     setPositionList(res);
   };
-  const onChange: PaginationProps['onChange'] = pageNumber => {
-    const beginIndex=(pageNumber-1)*5
-    setPositionList(jobsData.slice(beginIndex,beginIndex+5))
+  const onChange: PaginationProps["onChange"] = (pageNumber) => {
+    const beginIndex = (pageNumber - 1) * 5;
+    setPositionList(filterList.slice(beginIndex, beginIndex + 5));
   };
   return (
     <Layout className={styles.recruitment}>
@@ -198,16 +204,13 @@ const Recruitment: NextPage = ({ filterData, jobsData }: any) => {
             );
           })}
         </Sider>
-        <Content className={styles.positionList}>
+        <Content className={styles.positionListWarp}>
+          <div className={styles.positionList}>
           {positionList.map((el: Position) => {
             return <PositionItem position={el} key={el.id} />;
           })}
-          <Pagination
-            onChange={onChange}
-            pageSize={5}
-            defaultCurrent={1}
-            total={6}
-          />
+          </div>
+          <Pagination className={styles.pagination} onChange={onChange} pageSize={5} total={total} />
         </Content>
       </Layout>
     </Layout>

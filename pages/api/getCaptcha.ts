@@ -13,6 +13,7 @@ export default async function handler(
       email,
     },
   });
+  console.log(result)
   const { error_code, data, message } = result;
   if (error_code) {
     res.status(error_code).json({ message });

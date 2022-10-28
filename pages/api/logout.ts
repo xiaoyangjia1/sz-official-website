@@ -12,9 +12,5 @@ export default async function handler(
   });
   deleteCookie("access_token", { req, res })
   const { error_code, data, message } = result;
-  if (error_code) {
-    res.status(error_code).json({ message });
-  } else {
-    res.status(200).json(data);
-  }
+  res.status(200).json(data)
 }
