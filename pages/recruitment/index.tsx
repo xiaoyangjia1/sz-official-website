@@ -13,6 +13,7 @@ import styles from "./recruitment.module.scss";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { NextPage } from "next";
+import { formatDate } from "@/utils/date";
 
 const { Header, Sider, Content } = Layout;
 const { Search } = Input;
@@ -48,13 +49,18 @@ interface MultilevelOptionsItem {
   options: OptionsItem[];
 }
 const PositionItem = ({ position }: any) => {
-  const { pid, title, batch, category, desc } = position;
+  const { pid, title, batch, category, desc, deadline } = position;
+  const dateTime = formatDate(deadline);
   return (
     <Link href={`/position/${pid}`} target="_blank">
       <Card
         style={{ marginBottom: "0px" }}
         title={<h2>{title}</h2>}
-        extra={<span>投递截止时间：2023-9-19</span>}
+        extra={
+          <span>
+            投递截止时间：<time dateTime={dateTime}>{dateTime}</time>
+          </span>
+        }
       >
         <p>
           {batch} | {category}
@@ -206,11 +212,16 @@ const Recruitment: NextPage = ({ filterData, jobsData }: any) => {
         </Sider>
         <Content className={styles.positionListWarp}>
           <div className={styles.positionList}>
-          {positionList.map((el: Position) => {
-            return <PositionItem position={el} key={el.id} />;
-          })}
+            {positionList.map((el: Position) => {
+              return <PositionItem position={el} key={el.id} />;
+            })}
           </div>
-          <Pagination className={styles.pagination} onChange={onChange} pageSize={5} total={total} />
+          <Pagination
+            className={styles.pagination}
+            onChange={onChange}
+            pageSize={5}
+            total={total}
+          />
         </Content>
       </Layout>
     </Layout>

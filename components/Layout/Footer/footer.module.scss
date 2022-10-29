@@ -1,6 +1,9 @@
 .footer {
-  height: 500px;
-  .test {
-    color: red;
+  height: 400px;
+  display: flex;
+  justify-content: space-evenly;
+  p {
+    font-size: 20px;
+    color: #fff;
   }
 }

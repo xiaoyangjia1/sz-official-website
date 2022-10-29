@@ -1,7 +1,7 @@
-import { Button, Card } from "antd";
+import { Button, Card, Spin } from "antd";
 import styles from "./position.module.scss";
 import { NextPage } from "next";
-import  { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import useSWR from "swr";
 import { formatDate } from "@/utils/date";
 import { useState } from "react";
@@ -19,7 +19,7 @@ const Position: NextPage = () => {
     async (api) => {
       const data = await fetcher(api);
       setDisabled(data.disabled);
-      return data
+      return data;
     }
   );
   if (err1 || err2)
@@ -29,7 +29,12 @@ const Position: NextPage = () => {
         {err2?.message}
       </div>
     );
-  if (!positionData || !queryData) return <div>Loading...</div>;
+  if (!positionData || !queryData)
+    return (
+      <div className="pageWarp">
+        <Spin size="large" />
+      </div>
+    );
   const {
     title,
     test,
@@ -51,7 +56,7 @@ const Position: NextPage = () => {
       }),
     });
     if (res.status === 401) {
-      router.push('/login')
+      router.push("/login");
     }
     if (res.status === 200) {
       setDisabled(true);
@@ -70,26 +75,27 @@ const Position: NextPage = () => {
             {disabled ? "已投递" : "投递简历"}
           </Button>
         }
+        bodyStyle={{ display: "none" }}
       ></Card>
       <Card title={<h3>基础信息</h3>}>
         <p>
-          <span>发布时间：{created_at}</span>
-          <span>截止时间：{deadline}</span>
+          <span>
+            发布时间：<time dateTime={created_at}>{created_at}</time>
+          </span>
+          <span>
+            截止时间：<time dateTime={deadline}>{deadline}</time>
+          </span>
         </p>
         <p>
+          <span>招新批次：{batch}</span>
+          <span>所属类别：{category}</span>
+        </p>
+        <>
           流程：投递简历、{test ? "笔试、" : null}
           {interview ? "面试、" : null}
           {check1 ? "一轮考核、" : null}
           {check2 ? "二轮考核、" : null}offer
-        </p>
-        <p>
-          <span>招新批次：{batch}</span>
-          <span>所属类别：研发-{category}</span>
-        </p>
-        <p>
-          <span>招新院校：广东工业大学</span>
-          <span>招新对象：大一、大二</span>
-        </p>
+        </>
       </Card>
       <Card title={<h3>职位描述</h3>}>{desc}</Card>
       <Card title={<h3>职位要求</h3>}>{requirements}</Card>
