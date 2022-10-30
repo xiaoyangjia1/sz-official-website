@@ -1,5 +1,4 @@
 import { Card, Spin, Tabs } from "antd";
-import styles from "./personal.module.scss";
 import { useRouter } from "next/router";
 import Resume from "@/components/Resume";
 import Application from "@/components/Application";
@@ -58,7 +57,7 @@ const Personal: NextPage = () => {
     }
   };
   return (
-    <div className={styles.personalWarp}>
+    <div className="pageContent">
       <Card style={{ marginBottom: "20px" }}>
         <div>
           <p>Hi,欢迎参加数智工作室校园招新</p>

@@ -1,9 +1,6 @@
 import { formatDate } from "@/utils/date";
 import { Card, Table, Steps } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { NextComponentType } from "next";
-import { useEffect } from "react";
-import styles from "./application.module.scss";
 interface DataType {
   key: React.Key;
   pid: string;
@@ -65,7 +62,7 @@ const Application = ({ applicationData }: any) => {
     };
   });
   return (
-    <div>
+    <>
       <Card title={<h3>进行中</h3>}>
         <Table
           pagination={false}
@@ -94,7 +91,7 @@ const Application = ({ applicationData }: any) => {
           })}
         />
       </Card>
-    </div>
+    </>
   );
 };
 export default Application;

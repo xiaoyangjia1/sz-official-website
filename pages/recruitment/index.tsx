@@ -54,7 +54,7 @@ const PositionItem = ({ position }: any) => {
   return (
     <Link href={`/position/${pid}`} target="_blank">
       <Card
-        style={{ marginBottom: "0px" }}
+        style={{ marginBottom: "0px", cursor: "pointer" }}
         title={<h2>{title}</h2>}
         extra={
           <span>
@@ -228,19 +228,18 @@ const Recruitment: NextPage = ({ filterData, jobsData }: any) => {
   );
 };
 export async function getStaticProps() {
-  const baseURL = "http://127.0.0.1:3000/api";
-  const res1 = await fetch(baseURL + "/getJobs");
-  const jobsData = await res1.json();
-  const res2 = await fetch(baseURL + "/getAllBatch");
-  const batchData = await res2.json();
+  const res1 = await fetch(`${process.env.baseUrl}/getJobs`);
+  const { data: jobsData } = await res1.json();
+  const res2 = await fetch(`${process.env.baseUrl}/getAllBatch`);
+  const { data: batchData } = await res2.json();
   const batch_options = batchData.map((el: any) => {
     return {
       label: el.name,
       value: el.name,
     };
   });
-  const res3 = await fetch(baseURL + "/getAllCategory");
-  const categoryData = await res3.json();
+  const res3 = await fetch(`${process.env.baseUrl}/getAllCategory`);
+  const { data: categoryData } = await res3.json();
   const category_options = categoryData
     .filter((el: any) => {
       return el.pid === 0;
@@ -275,6 +274,7 @@ export async function getStaticProps() {
       ],
       jobsData,
     },
+    revalidate: 10,
   };
 }
 export default Recruitment;

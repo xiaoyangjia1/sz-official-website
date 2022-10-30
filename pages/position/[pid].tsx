@@ -63,7 +63,7 @@ const Position: NextPage = () => {
     }
   };
   return (
-    <div className={styles.position}>
+    <div className={`${styles.position} pageContent`}>
       <Card
         title={<h3>{title}</h3>}
         extra={
