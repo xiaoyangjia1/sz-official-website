@@ -1,11 +1,8 @@
 .operation {
   height: 80px;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
   box-shadow: 0px -1px 10px 0px rgba(0, 0, 0, 0.1);
   background-color: #fff;
-  button {
-    padding: 0px 50px;
-  }
 }

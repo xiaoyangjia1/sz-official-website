@@ -62,7 +62,7 @@ const Resume = ({ resumeData }: any) => {
         <Form.Item label="性别" name="sex">
           <Radio.Group value={1}>
             <Radio value={1}>男</Radio>
-            <Radio value={0}>女</Radio>
+            <Radio value={2}>女</Radio>
           </Radio.Group>
         </Form.Item>
         <Form.Item
@@ -134,9 +134,7 @@ const Resume = ({ resumeData }: any) => {
           <Button size="large" type="primary" shape="round" htmlType="submit">
             保存简历
           </Button>
-          <Button size="large" type="primary" shape="round">
-            预览
-          </Button>
+
         </div>
       </Affix>
     </Form>

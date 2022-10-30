@@ -1,6 +1,6 @@
 import "antd/dist/antd.css";
 import "@/styles/resetAntd.scss";
-import "@/styles/globals.scss";
+import "@/styles/globals.css";
 import "@/styles/common.scss";
 import type { AppProps } from "next/app";
 import { Layout } from "@/components/Layout";

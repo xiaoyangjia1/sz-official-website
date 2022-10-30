@@ -25,10 +25,10 @@ footer {
   background: #1f2329;
   align-items: center;
   justify-content: space-evenly;
-  p {
-    font-size: 20px;
-    color: #fff;
-  }
+}
+footer p {
+  font-size: 20px;
+  color: #fff;
 }
 
 @media (prefers-color-scheme: dark) {
