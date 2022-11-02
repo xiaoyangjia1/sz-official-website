@@ -112,16 +112,28 @@ const Resume = ({ resumeData }: any) => {
         <Form.Item
           label="学习情况"
           name="learning"
+          style={{
+            width: "100%",
+          }}
+          wrapperCol={{
+            span: 24,
+          }}
           rules={[{ required: true, message: "请填写学习情况!" }]}
         >
-          <TextArea rows={4} />
+          <TextArea rows={10} showCount maxLength={300} />
         </Form.Item>
         <Form.Item
           label="校园生活"
           name="university_life"
+          style={{
+            width: "100%",
+          }}
+          wrapperCol={{
+            span: 24,
+          }}
           rules={[{ required: true, message: "请填写校园生活!" }]}
         >
-          <TextArea rows={4} />
+          <TextArea rows={10} showCount maxLength={300} />
         </Form.Item>
       </Card>
       <Card title={<h3>作品附件</h3>}>
@@ -129,11 +141,11 @@ const Resume = ({ resumeData }: any) => {
           <Input />
         </Form.Item>
       </Card>
-        <div className={styles.operation}>
-          <Button size="large" type="primary" shape="round" htmlType="submit">
-            保存简历
-          </Button>
-        </div>
+      <div className={styles.operation}>
+        <Button size="large" type="primary" shape="round" htmlType="submit">
+          保存简历
+        </Button>
+      </div>
     </Form>
   );
 };

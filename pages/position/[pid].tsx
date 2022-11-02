@@ -52,6 +52,7 @@ const Position: NextPage = () => {
 
   const handleDeliveryJob = async () => {
     const token = getCookie("access_token");
+    console.log(token)
     if (!token) {
       router.push("/login");
       return;

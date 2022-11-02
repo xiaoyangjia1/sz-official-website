@@ -20,6 +20,11 @@ const AuthForm = ({ title, api }: any) => {
     if (res.status === 200) {
       router.push("/personal/application");
     }
+    if(res.status===500) {
+      form.setFields([
+        { name: "captcha", errors: ["验证码错误"] },
+      ]);
+    }
   };
   const onRegisterFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);

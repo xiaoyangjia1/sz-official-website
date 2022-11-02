@@ -7,14 +7,14 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { body } = req;
-  const { email, password,captcha } = JSON.parse(body);
+  const { email, password, captcha } = JSON.parse(body);
   const { data: result } = await request({
     url: "/register",
     method: "post",
     data: {
       email,
       password,
-      captcha
+      captcha,
     },
   });
   const { error_code, data, message } = result;
@@ -23,25 +23,15 @@ export default async function handler(
   } else {
     const MAX_AGE = 60 * 60 * 24 * 1;
     setCookie("access_token", data.access_token, {
-        req,
-        res,
-        maxAge: MAX_AGE,
-        expires: new Date(Date.now() + MAX_AGE * 1000),
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        path: "/",
-        sameSite: "lax",
-      });
-      setCookie("email", email, {
-        req,
-        res,
-        maxAge: MAX_AGE,
-        expires: new Date(Date.now() + MAX_AGE * 1000),
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        path: "/",
-        sameSite: "lax",
-      });
+      req,
+      res,
+      maxAge: MAX_AGE,
+    });
+    setCookie("email", email, {
+      req,
+      res,
+      maxAge: MAX_AGE,
+    });
     res.status(200).json(data);
   }
 }
