@@ -9,7 +9,7 @@ export default async function handler(
   const { body } = req;
   const { email, password,captcha } = JSON.parse(body);
   const { data: result } = await request({
-    url: "/api/resetPassword",
+    url: "/resetPassword",
     method: "post",
     data: {
       email,

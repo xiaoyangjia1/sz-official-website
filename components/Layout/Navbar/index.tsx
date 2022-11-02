@@ -1,8 +1,10 @@
 import { Button, Menu } from "antd";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { getNavKeyByPathName } from "@/utils/location";
+import styles from "./navbar.module.scss";
 const Navbar = () => {
   const [current, setCurrent] = useState<string>("home");
   const router = useRouter();
@@ -36,7 +38,7 @@ const Navbar = () => {
     {
       label: (
         <Link
-          href={loginBtnText === "登出" ? "/personal/application" : "login"}
+          href={loginBtnText === "登出" ? "/personal/application" : "/login"}
         >
           个人中心
         </Link>
@@ -55,7 +57,10 @@ const Navbar = () => {
     },
   ];
   return (
-    <header>
+    <header
+      className={current === "home" ? `${styles.homeHeader} homeHeader` : ""}
+    >
+      <Image src={current === "home" ? "/logo1.svg" : "/logo2.svg"} width={250} height={50} />
       <Menu selectedKeys={[current]} mode="horizontal" items={items} />
     </header>
   );

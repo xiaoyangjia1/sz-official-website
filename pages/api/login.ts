@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import request from "@/utils/request";
-import { getCookie, getCookies, setCookie } from "cookies-next";
+import { setCookie } from "cookies-next";
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -8,7 +8,7 @@ export default async function handler(
   const { body } = req;
   const { email, password } = JSON.parse(body);
   const { data: result } = await request({
-    url: "/api/login",
+    url: "/login",
     method: "post",
     data: {
       email,
@@ -20,7 +20,6 @@ export default async function handler(
     res.status(error_code).json({ message });
   } else {
     const MAX_AGE = 60 * 60 * 24;
-    console.log("loginS: ", data.access_token, email);
     setCookie("access_token", data.access_token, {
       req,
       res,

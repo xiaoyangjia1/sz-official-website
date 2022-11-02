@@ -1,9 +1,10 @@
 import styles from "./authForm.module.scss";
 import { Button, Col, Form, Input, Row } from "antd";
-import router from "next/router";
+import { useRouter } from "next/router";
 import Link from "next/link";
 import { useState } from "react";
-const AuthForm = ({title,api}: any) => {
+const AuthForm = ({ title, api }: any) => {
+  const router = useRouter();
   const [form] = Form.useForm();
   const [disabled, setDisabled] = useState<boolean>(false);
   const [second, setSecond] = useState<number>(60);
@@ -82,7 +83,8 @@ const AuthForm = ({title,api}: any) => {
           rules={[
             {
               required: true,
-              pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&#])[A-Za-z\d$@$!%*?&#]{8,}/,
+              pattern:
+                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&#])[A-Za-z\d$@$!%*?&#]{8,}/,
               message: "密码格式错误",
             },
           ]}

@@ -1,0 +1,27 @@
+.homeHeader {
+  position: absolute;
+  z-index: 1;
+  ul {
+    width: -webkit-fill-available;
+    text-align: end;
+    border-bottom: none;
+    background: transparent;
+    li a {
+      color: #fff !important;
+    }
+    li a:hover {
+      color: #fff !important;
+      font-weight: 900;
+    }
+    li a:hover::after {
+      border-bottom: none !important;
+    }
+  }
+  button span {
+    color: #fff;
+  }
+  button span:hover {
+    color: #fff;
+    font-weight: 900;
+  }
+}

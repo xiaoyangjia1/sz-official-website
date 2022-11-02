@@ -6,7 +6,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { data: result } = await request({
-    url: "/api/getAllBatch",
+    url: "/getAllBatch",
     method: "get",
   });
   const { error_code, data, message } = result;

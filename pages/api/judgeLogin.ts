@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getCookie, getCookies } from "cookies-next";
+import { getCookie } from "cookies-next";
 
 export default async function handler(
   req: NextApiRequest,

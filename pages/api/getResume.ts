@@ -9,7 +9,7 @@ export default async function handler(
   const token = getCookie("access_token", { req, res });
   const email = getCookie("email", { req, res });
   const { data: result } = await request({
-    url: "/api/auth/getResume",
+    url: "/auth/getResume",
     method: "get",
     params: {
       email,

@@ -1,6 +1,6 @@
 import axios from "axios";
 const service = axios.create({
-  baseURL: "http://47.115.228.82:81", // url = base url + request url
+  baseURL: process.env.baseURL, // url = base url + request url
   timeout: 5000, // request timeout
 });
 

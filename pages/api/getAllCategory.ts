@@ -6,7 +6,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { data: result } = await request({
-    url: "/api/getAllCategory",
+    url: "/getAllCategory",
     method: "get",
   });
   const { error_code, data, message } = result;

@@ -15,7 +15,7 @@ export default async function handler(
   const { body } = req;
   const { pid } = JSON.parse(body);
   const { data: result } = await request({
-    url: "/api/auth/deliveryJob",
+    url: "/auth/deliveryJob",
     method: "post",
     data: {
       pid,

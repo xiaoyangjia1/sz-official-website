@@ -1,9 +1,10 @@
 import { NextPage } from "next";
 import styles from "./login.module.scss";
 import { Button, Form, Input } from "antd";
-import router from "next/router";
+import { useRouter } from "next/router";
 import Link from "next/link";
 const Login: NextPage = () => {
+  const router = useRouter();
   const [form] = Form.useForm();
   const onLogin = async (values: any) => {
     const res = await fetch("/api/login", {

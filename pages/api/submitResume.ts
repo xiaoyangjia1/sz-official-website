@@ -24,7 +24,7 @@ export default async function handler(
     files,
   } = JSON.parse(body);
   const { data: result } = await request({
-    url: "/api/auth/submitResume",
+    url: "/auth/submitResume",
     method: "post",
     data: {
       college,

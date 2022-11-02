@@ -15,7 +15,7 @@ export default async function handler(
   const { query } = req;
   const { pid } = query;
   const { data: result } = await request({
-    url: "/api/auth/queryIsDelivered",
+    url: "/auth/queryIsDelivered",
     method: "get",
     params: {
       email,

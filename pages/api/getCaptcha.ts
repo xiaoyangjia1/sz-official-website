@@ -7,7 +7,7 @@ export default async function handler(
   const { body } = req;
   const { email } = JSON.parse(body);
   const { data: result } = await request({
-    url: "/api/getCaptcha",
+    url: "/getCaptcha",
     method: "get",
     params: {
       email,

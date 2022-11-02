@@ -5,7 +5,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const { query } = req;
   const { pid } = query;
   const { data: result } = await request({
-    url: "/api/getPosition",
+    url: "/getPosition",
     method: "get",
     params: {
       pid,

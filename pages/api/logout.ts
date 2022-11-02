@@ -7,7 +7,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { data: result } = await request({
-    url: "/api/auth/logout",
+    url: "/auth/logout",
     method: "post",
   });
   deleteCookie("access_token", { req, res })

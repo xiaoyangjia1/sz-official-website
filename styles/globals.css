@@ -15,6 +15,28 @@ a {
 * {
   box-sizing: border-box;
 }
+header {
+  width: 100vw;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 5vw 0;
+}
+header ul {
+  display: block !important;
+  width: -webkit-fill-available;
+  text-align: end !important;
+  border-bottom: none;
+  background: transparent;
+}
+.homeHeader .ant-menu-horizontal > .ant-menu-item-selected a{
+  font-weight: 900;
+}
+.homeHeader .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item-selected::after {
+  border-bottom: 2px solid #fff;
+}
+.homeHeader .ant-menu-horizontal > .ant-menu-item:hover::after {
+  border-bottom: 2px solid #fff !important;
+}
 main {
   min-height: 100vh;
 }

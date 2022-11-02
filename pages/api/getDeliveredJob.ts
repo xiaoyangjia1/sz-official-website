@@ -8,7 +8,7 @@ export default async function handler(
   const token = getCookie("access_token", { req, res });
   const email = getCookie("email", { req, res });
   const { data: result } = await request({
-    url: "/api/auth/getDeliveredJob",
+    url: "/auth/getDeliveredJob",
     method: "get",
     params: {
       email,
