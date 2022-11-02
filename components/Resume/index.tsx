@@ -1,4 +1,4 @@
-import { message, Button, Card, Form, Input, Radio, Affix } from "antd";
+import { message, Button, Card, Form, Input, Radio } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import styles from "./resume.module.scss";
 const Resume = ({ resumeData }: any) => {
@@ -129,14 +129,11 @@ const Resume = ({ resumeData }: any) => {
           <Input />
         </Form.Item>
       </Card>
-      <Affix offsetBottom={10}>
         <div className={styles.operation}>
           <Button size="large" type="primary" shape="round" htmlType="submit">
             保存简历
           </Button>
-
         </div>
-      </Affix>
     </Form>
   );
 };

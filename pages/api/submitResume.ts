@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import request from "@/utils/request";
-import { getCookie } from "cookies-next";
+import { getCookie,setCookie } from "cookies-next";
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -48,6 +48,7 @@ export default async function handler(
   if (error_code) {
     res.status(error_code).json({ message });
   } else {
+    setCookie("isPerfectedResume", true, { req, res });
     res.status(200).json(data);
   }
 }

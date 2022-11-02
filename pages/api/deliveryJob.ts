@@ -7,10 +7,6 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const token = getCookie("access_token", { req, res });
-  if (!token) {
-    res.status(401).json({message: '用户未登录'});
-    return 
-  }
   const email = getCookie("email", { req, res });
   const { body } = req;
   const { pid } = JSON.parse(body);
