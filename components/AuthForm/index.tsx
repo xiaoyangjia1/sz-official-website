@@ -20,19 +20,52 @@ const AuthForm = ({ title, api }: any) => {
     if (res.status === 200) {
       router.push("/personal/application");
     }
-    if(res.status===500) {
-      form.setFields([
-        { name: "captcha", errors: ["验证码错误"] },
-      ]);
+    if (res.status === 500) {
+      form.setFields([{ name: "captcha", errors: ["验证码错误"] }]);
     }
   };
   const onRegisterFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
+
+  const judgeRegister = async (email: string) => {
+    const result = await fetch(`/api/judgeRegister`, {
+      method: "POST",
+      body: JSON.stringify({
+        email,
+      }),
+    });
+    const data = await result.json();
+    return data;
+  };
+  const checkEmail = async (value: string) => {
+    const pattern =
+      /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/;
+    if (pattern.test(value)) {
+      const isRegister = await judgeRegister(value);
+      console.log(router.pathname)
+      if (isRegister && router.pathname === "/register") {
+        form.setFields([{ name: "email", errors: ["该邮箱已注册!"] }]);
+      }
+      if (!isRegister && router.pathname === "/resetPassword") {
+        form.setFields([{ name: "email", errors: ["该邮箱未注册!"] }]);
+      }
+    }
+  };
   const handleGetCaptcha = async () => {
     form
-      .validateFields(["email"])
+      .validateFields(["email", "password"])
       .then(async ({ email }: any) => {
+        const isRegister = await judgeRegister(email);
+        if (isRegister && router.pathname === "/register") {
+          form.setFields([{ name: "email", errors: ["该邮箱已注册!"] }]);
+          return;
+        }
+        if (!isRegister && router.pathname === "/resetPassword") {
+          form.setFields([{ name: "email", errors: ["该邮箱未注册!"] }]);
+          return;
+        }
+
         setDisabled(true);
         let second = 60;
         const timerId = setInterval(() => {
@@ -43,7 +76,7 @@ const AuthForm = ({ title, api }: any) => {
             setSecond(60);
           }
         }, 1000);
-        const result = await fetch("/api/getCaptcha", {
+        await fetch("/api/getCaptcha", {
           method: "POST",
           body: JSON.stringify({
             email,
@@ -79,7 +112,11 @@ const AuthForm = ({ title, api }: any) => {
             },
           ]}
         >
-          <Input placeholder="输入邮箱" />
+          <Input
+            type="email"
+            onChange={(e) => checkEmail(e.target.value)}
+            placeholder="输入邮箱"
+          />
         </Form.Item>
 
         <Form.Item
