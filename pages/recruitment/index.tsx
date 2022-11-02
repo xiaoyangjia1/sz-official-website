@@ -6,6 +6,7 @@ import {
   Divider,
   Pagination,
   PaginationProps,
+  Empty,
 } from "antd";
 import type { CheckboxValueType } from "antd/es/checkbox/Group";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
@@ -86,7 +87,11 @@ const MultilevelFilterItem = ({ title, options, onFilter }: FilterInfo) => {
   const defaultCheckedList: CheckboxValueType[][] = [];
   const [checkedList, setCheckedList] =
     useState<CheckboxValueType[][]>(defaultCheckedList);
-  const [indeterminate, setIndeterminate] = useState<boolean>(true);
+  const [indeterminateList, setIndeterminateList] = useState<boolean[]>([
+    false,
+    false,
+  ]);
+
   const [checkAll, setCheckAll] = useState<boolean[]>([false]);
   const onChange = (
     list: CheckboxValueType[],
@@ -99,7 +104,9 @@ const MultilevelFilterItem = ({ title, options, onFilter }: FilterInfo) => {
     newCheckAll[index] = list.length === options.length;
     onFilter(newCheckedList.flat());
     setCheckedList(newCheckedList);
-    setIndeterminate(!!list.length && list.length < options.length);
+    const newIndeterminateList = JSON.parse(JSON.stringify(indeterminateList));
+    newIndeterminateList[index] = !!list.length && list.length < options.length;
+    setIndeterminateList(newIndeterminateList);
     setCheckAll(newCheckAll);
   };
 
@@ -118,7 +125,9 @@ const MultilevelFilterItem = ({ title, options, onFilter }: FilterInfo) => {
     newCheckAll[index] = e.target.checked;
     onFilter(newCheckedList.flat());
     setCheckedList(newCheckedList);
-    setIndeterminate(false);
+    const newIndeterminateList = JSON.parse(JSON.stringify(indeterminateList));
+    newIndeterminateList[index] = !newIndeterminateList[index];
+    setIndeterminateList(newIndeterminateList);
     setCheckAll(newCheckAll);
   };
 
@@ -129,7 +138,7 @@ const MultilevelFilterItem = ({ title, options, onFilter }: FilterInfo) => {
         return (
           <div key={el.label}>
             <Checkbox
-              indeterminate={indeterminate}
+              indeterminate={indeterminateList[index]}
               onChange={(e) => {
                 onCheckAllChange(e, el.options, index);
               }}
@@ -211,17 +220,21 @@ const Recruitment: NextPage = ({ filterData, jobsData }: any) => {
           })}
         </Sider>
         <Content className={styles.positionListWarp}>
-          <div className={styles.positionList}>
-            {positionList.map((el: Position) => {
-              return <PositionItem position={el} key={el.id} />;
-            })}
-          </div>
-          <Pagination
-            className={styles.pagination}
-            onChange={onChange}
-            pageSize={5}
-            total={total}
-          />
+          {positionList.length > 0 ? (
+            <>
+              {positionList.map((el: Position) => {
+                return <PositionItem position={el} key={el.id} />;
+              })}
+              <Pagination
+                className={styles.pagination}
+                onChange={onChange}
+                pageSize={5}
+                total={total}
+              />
+            </>
+          ) : (
+            <Empty />
+          )}
         </Content>
       </Layout>
     </Layout>

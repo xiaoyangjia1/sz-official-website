@@ -1,5 +1,5 @@
 .recruitment {
-  height: inherit;
+  min-height: 100vh;
   padding: 20px 15vw;
   .searchHeader {
     width: 100%;
@@ -21,13 +21,9 @@
   }
   .positionListWarp {
     height: auto;
-    position: relative;
-    .positionList {
-      margin-bottom: 50px;
-    }
     .pagination {
-      position: absolute;
-      bottom: 0px;
+      margin-top: 20px;
+      text-align: end;
       right: 0;
     }
   }
