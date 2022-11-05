@@ -52,7 +52,6 @@ const Position: NextPage = () => {
 
   const handleDeliveryJob = async () => {
     const token = getCookie("access_token");
-    console.log(token)
     if (!token) {
       router.push("/login");
       return;
@@ -71,7 +70,6 @@ const Position: NextPage = () => {
     }
 
     const deliveredInfo = JSON.parse(getCookie("deliveredInfo") as string);
-    console.log(deliveredInfo[positionData.batch])
     if (
       deliveredInfo[positionData.batch] &&
       deliveredInfo[positionData.batch] >= 1

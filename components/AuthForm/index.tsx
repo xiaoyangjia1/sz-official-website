@@ -43,7 +43,6 @@ const AuthForm = ({ title, api }: any) => {
       /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/;
     if (pattern.test(value)) {
       const isRegister = await judgeRegister(value);
-      console.log(router.pathname)
       if (isRegister && router.pathname === "/register") {
         form.setFields([{ name: "email", errors: ["该邮箱已注册!"] }]);
       }

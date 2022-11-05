@@ -1,37 +1,23 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import request from "@/utils/request";
-import { setCookie } from "cookies-next";
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   const { body } = req;
-  const { email, password,captcha } = JSON.parse(body);
+  const { formData } = JSON.parse(body);
   const { data: result } = await request({
-    url: "/resetPassword",
+    url: "/uploadFile",
     method: "post",
-    data: {
-      email,
-      password,
-      captcha
+    data: formData.get('file'),
+    headers: {
+      "Content-Type": "multipart/form-data",
     },
   });
   const { error_code, data, message } = result;
   if (error_code) {
     res.status(error_code).json({ message });
   } else {
-    const MAX_AGE = 60 * 60 * 24 * 1;
-    setCookie("access_token", data.access_token, {
-        req,
-        res,
-        maxAge: MAX_AGE,
-      });
-      setCookie("email", email, {
-        req,
-        res,
-        maxAge: MAX_AGE,
-      });
     res.status(200).json(data);
   }
 }

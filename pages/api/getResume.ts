@@ -20,15 +20,15 @@ export default async function handler(
   if (error_code) {
     res.status(error_code).json({ message });
   } else {
-    let isPerfectedResume=true 
-    for (let key in data) {
+    let isPerfectedResume = true;
+    for (let key of Object.keys(data)) {
       if (data[key] === "" && key !== "link") {
         setCookie("isPerfectedResume", false, { req, res });
-        isPerfectedResume=false
+        isPerfectedResume = false;
         break;
       }
     }
-    if(isPerfectedResume){
+    if (isPerfectedResume) {
       setCookie("isPerfectedResume", true, { req, res });
     }
     res.status(200).json(data);

@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import request from "@/utils/request";
-import { getCookie,  setCookie } from "cookies-next";
+import { getCookie, setCookie } from "cookies-next";
 interface DeliveredItem {
   id: number;
   email: string;
@@ -21,6 +21,11 @@ interface DeliveredItem {
   created_at: string;
   updated_at: string;
 }
+interface Result {
+  error_code: number;
+  data: DeliveredItem[];
+  message: string;
+}
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -35,7 +40,7 @@ export default async function handler(
     },
     headers: { Authorization: `Bearer ${token}` },
   });
-  const { error_code, data, message } = result;
+  const { error_code, data, message }: Result = result;
   if (error_code) {
     res.status(error_code).json({ message });
   } else {

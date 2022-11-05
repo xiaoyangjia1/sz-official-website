@@ -60,7 +60,7 @@ const Navbar = () => {
     <header
       className={current === "home" ? `${styles.homeHeader} homeHeader` : ""}
     >
-      <Image src={current === "home" ? "/logo1.svg" : "/logo2.svg"} width={250} height={50} />
+      <Image src={current === "home" ? "/logo1.svg" : "/logo2.svg"} alt="图片失效" width={250} height={50} />
       <Menu selectedKeys={[current]} mode="horizontal" items={items} />
     </header>
   );
