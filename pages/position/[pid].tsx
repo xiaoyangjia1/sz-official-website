@@ -30,7 +30,7 @@ const Position: NextPage = () => {
         {err2?.message}
       </div>
     );
-  if (!positionData || !queryData)
+  if (!positionData || !queryData || positionData.deadline==='')
     return (
       <div className="pageWarp">
         <Spin size="large" />

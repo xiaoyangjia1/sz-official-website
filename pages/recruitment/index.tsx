@@ -161,6 +161,7 @@ const MultilevelFilterItem = ({ title, options, onFilter }: FilterInfo) => {
   );
 };
 const Recruitment: NextPage = ({ filterData, jobsData }: any) => {
+  console.log(filterData, jobsData);
   if (filterData[0].options.length === 0) {
     return <Empty description="目前暂未开启新一轮招新，敬请期待！" />;
   }
@@ -247,20 +248,23 @@ const Recruitment: NextPage = ({ filterData, jobsData }: any) => {
 };
 export async function getStaticProps() {
   const res1 = await fetch(`${process.env.baseURL}/getJobs`);
-  const { data: jobsData } = await res1.json();
+  const { data: jobsList }: { [key: string]: Position[] } = await res1.json();
+  const jobsData = jobsList.filter(({ status }: Position) => {
+    return status;
+  });
   const res2 = await fetch(`${process.env.baseURL}/getAllBatch`);
   const { data: batchData } = await res2.json();
-  const batch_options = batchData.map((el: any) => {
+  const batch_options = batchData.map(({ name }: any) => {
     return {
-      label: el.name,
-      value: el.name,
+      label: name,
+      value: name,
     };
   });
   const res3 = await fetch(`${process.env.baseURL}/getAllCategory`);
   const { data: categoryData } = await res3.json();
   const category_options: MultilevelOptionsItem[] = [];
   jobsData.forEach(({ category }: Position) => {
-    const {pid} = categoryData.filter(({ name }: any) => {
+    const { pid } = categoryData.filter(({ name }: any) => {
       return name === category;
     })[0];
     const level1_label = categoryData[pid - 1].name;

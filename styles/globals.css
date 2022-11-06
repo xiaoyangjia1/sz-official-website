@@ -39,7 +39,7 @@ header ul {
 .homeHeader .ant-menu-horizontal > .ant-menu-item:hover::after {
   border-bottom: 2px solid #fff !important;
 }
-main {
+#__next > main {
   min-height: 100vh;
   display: flex;
   justify-content: center;

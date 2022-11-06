@@ -66,7 +66,6 @@ const Personal: NextPage = () => {
       <Tabs
         onChange={onChange}
         activeKey={activeKey}
-        defaultActiveKey="1"
         type="card"
         items={items}
       />
