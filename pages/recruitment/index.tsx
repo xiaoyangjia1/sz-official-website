@@ -7,6 +7,7 @@ import {
   Pagination,
   PaginationProps,
   Empty,
+  TreeSelect,
 } from "antd";
 import type { CheckboxValueType } from "antd/es/checkbox/Group";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
@@ -160,6 +161,9 @@ const MultilevelFilterItem = ({ title, options, onFilter }: FilterInfo) => {
   );
 };
 const Recruitment: NextPage = ({ filterData, jobsData }: any) => {
+  if (filterData[0].options.length === 0) {
+    return <Empty description="目前暂未开启新一轮招新，敬请期待！" />;
+  }
   const [positionList, setPositionList] = useState<Position[]>(jobsData);
   const [filterList, setFilterList] = useState<Position[]>(jobsData);
 
@@ -194,6 +198,7 @@ const Recruitment: NextPage = ({ filterData, jobsData }: any) => {
     const beginIndex = (pageNumber - 1) * 5;
     setPositionList(filterList.slice(beginIndex, beginIndex + 5));
   };
+
   return (
     <Layout className={styles.recruitment}>
       <Header className={styles.searchHeader}>
@@ -233,7 +238,7 @@ const Recruitment: NextPage = ({ filterData, jobsData }: any) => {
               />
             </>
           ) : (
-            <Empty />
+            <Empty description="暂无数据" />
           )}
         </Content>
       </Layout>
@@ -253,38 +258,60 @@ export async function getStaticProps() {
   });
   const res3 = await fetch(`${process.env.baseURL}/getAllCategory`);
   const { data: categoryData } = await res3.json();
-  const category_options = categoryData
-    .filter((el: any) => {
-      return el.pid === 0;
-    })
-    .map((el: any) => {
-      return {
-        label: el.name,
-        options: [],
-      };
+  const category_options: MultilevelOptionsItem[] = [];
+  jobsData.forEach(({ category }: Position) => {
+    const {pid} = categoryData.filter(({ name }: any) => {
+      return name === category;
+    })[0];
+    const level1_label = categoryData[pid - 1].name;
+    let level1_index = category_options.findIndex(({ label }: any) => {
+      label === level1_label;
     });
-  categoryData.forEach((el: any) => {
-    if (el.pid > 0) {
-      category_options[el.pid - 1].options.push({
-        label: el.name,
-        value: el.name,
-      });
+
+    if (level1_index === -1) {
+      const level1 = {
+        label: level1_label,
+        options: [
+          {
+            label: category,
+            value: category,
+          },
+        ],
+      };
+      category_options.push(level1);
+    } else {
+      const level2_index = category_options[level1_index].options.findIndex(
+        ({ label }: any) => {
+          label === category;
+        }
+      );
+      if (level2_index === -1) {
+        const level2 = {
+          label: category,
+          value: category,
+        };
+        category_options[level1_index].options.push(level2);
+      }
     }
   });
+  const filterData = [];
+  if (batch_options.length > 0) {
+    filterData.push({
+      title: "招聘项目",
+      options: batch_options,
+      multilevel: false,
+    });
+  }
+  if (category_options.length > 0) {
+    filterData.push({
+      title: "职位类别",
+      options: category_options,
+      multilevel: true,
+    });
+  }
   return {
     props: {
-      filterData: [
-        {
-          title: "招聘项目",
-          options: batch_options,
-          multilevel: false,
-        },
-        {
-          title: "职位类别",
-          options: category_options,
-          multilevel: true,
-        },
-      ],
+      filterData,
       jobsData,
     },
     revalidate: 10,

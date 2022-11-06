@@ -4,9 +4,10 @@ import type { ColumnsType } from "antd/es/table";
 import request from "@/utils/request";
 import { useState } from "react";
 import useSWR from "swr";
+import Link from "next/link";
 interface DeliveryItem {
   key: React.Key;
-  pid: string;
+  pid: any;
   title: string;
   batch: string;
   category: string;
@@ -31,6 +32,7 @@ const UploadFile = ({ applicationItem }: any) => {
     { title: "文件名", dataIndex: "name", key: "name" },
     { title: "操作", dataIndex: "delete", key: "delete" },
   ];
+
   const deleteUploadedFile = async (name: string) => {
     const res = await fetch("/api/deleteUploadedFile", {
       method: "POST",
@@ -91,6 +93,7 @@ const UploadFile = ({ applicationItem }: any) => {
     formData.append("batch", batch);
     formData.append("title", title);
     formData.append("email", email);
+    message.warning("上传过程中请勿刷新浏览器")
     const { data: result } = await request({
       url: "/uploadFile",
       method: "post",
@@ -100,7 +103,6 @@ const UploadFile = ({ applicationItem }: any) => {
       },
     });
     const { error_code, data } = result;
-    console.log(result);
     if (error_code === 0) {
       message.success("上传文件成功");
       getUploadedFile("/api/getUploadedFile");
@@ -114,7 +116,6 @@ const UploadFile = ({ applicationItem }: any) => {
       style={{ marginTop: "20px" }}
       columns={fileColumns}
       dataSource={fileData}
-      title={() => "上传文件列表"}
       footer={() => (
         <form method="post" encType="multipart/form-data">
           <input type="file" multiple onChange={(e) => handleUpload(e)} />
@@ -145,7 +146,7 @@ const Application = ({ applicationData }: any) => {
     }
     return {
       key: el.pid,
-      pid: el.pid,
+      pid: <Link href={`/position/${el.pid}`}>{el.pid}</Link>,
       batch: el.batch,
       category: el.category,
       title: el.title,

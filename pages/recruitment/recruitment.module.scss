@@ -15,11 +15,16 @@
     padding: 20px;
     border-radius: 10px;
     background-color: #fff;
+    label {
+      display: flex;
+      margin-bottom: 2px;
+    }
     .filterItem {
       margin-bottom: 20px;
     }
   }
   .positionListWarp {
+    display: block;
     height: auto;
     .pagination {
       margin-top: 20px;

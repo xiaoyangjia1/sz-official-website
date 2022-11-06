@@ -28,10 +28,12 @@ header ul {
   border-bottom: none;
   background: transparent;
 }
-.homeHeader .ant-menu-horizontal > .ant-menu-item-selected a{
+.homeHeader .ant-menu-horizontal > .ant-menu-item-selected a {
   font-weight: 900;
 }
-.homeHeader .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item-selected::after {
+.homeHeader
+  .ant-menu-horizontal:not(.ant-menu-dark)
+  > .ant-menu-item-selected::after {
   border-bottom: 2px solid #fff;
 }
 .homeHeader .ant-menu-horizontal > .ant-menu-item:hover::after {
@@ -39,6 +41,9 @@ header ul {
 }
 main {
   min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 footer {
