@@ -7,7 +7,6 @@ import {
   Pagination,
   PaginationProps,
   Empty,
-  TreeSelect,
 } from "antd";
 import type { CheckboxValueType } from "antd/es/checkbox/Group";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
@@ -267,9 +266,8 @@ export async function getStaticProps() {
     })[0];
     const level1_label = categoryData[pid - 1].name;
     let level1_index = category_options.findIndex(({ label }: any) => {
-      label === level1_label;
+      return label === level1_label;
     });
-
     if (level1_index === -1) {
       const level1 = {
         label: level1_label,

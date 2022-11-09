@@ -5,7 +5,6 @@ import request from "@/utils/request";
 import { useState } from "react";
 import useSWR from "swr";
 import Link from "next/link";
-import { getStatusClassNames } from "antd/lib/_util/statusUtils";
 interface DeliveryItem {
   key: React.Key;
   pid: any;

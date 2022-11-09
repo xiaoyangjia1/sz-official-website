@@ -1,7 +1,7 @@
 import { message, Button, Card, Form, Input, Radio } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import styles from "./resume.module.scss";
-import { phoneRule } from '@/utils/regexp';
+import { phoneRule } from "@/utils/regexp";
 const Resume = ({ resumeData }: any) => {
   const onFinish = async (values: any) => {
     const res = await fetch("/api/submitResume", {
@@ -97,7 +97,9 @@ const Resume = ({ resumeData }: any) => {
         <Form.Item
           label="手机号"
           name="phone"
-          rules={[{ required: true,pattern: phoneRule, message: "手机号格式错误!" }]}
+          rules={[
+            { required: true, pattern: phoneRule, message: "手机号格式错误!" },
+          ]}
         >
           <Input />
         </Form.Item>
@@ -138,7 +140,16 @@ const Resume = ({ resumeData }: any) => {
         </Form.Item>
       </Card>
       <Card title={<h3>作品附件</h3>}>
-        <Form.Item label="作品链接" name="link">
+        <Form.Item
+          label="作品链接"
+          name="link"
+          style={{
+            width: "50%",
+          }}
+          wrapperCol={{
+            span: 24,
+          }}
+        >
           <Input />
         </Form.Item>
       </Card>
