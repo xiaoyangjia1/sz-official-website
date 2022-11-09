@@ -14,10 +14,6 @@ interface DeliveredItem {
   check1: number;
   check2: number;
   offer: number;
-  files1: string;
-  files2: string;
-  link1: string;
-  link2: string;
   created_at: string;
   updated_at: string;
 }

@@ -17,8 +17,7 @@ const Navbar = () => {
   });
   const judgeLogin = async () => {
     const res = await fetch("/api/judgeLogin");
-    const { loggedIn } = await res.json();
-    setLoginBtnText(loggedIn ? "登出" : "登录");
+    setLoginBtnText(res.status===200 ? "登出" : "登录");
   };
   const handleLogin = async () => {
     if (loginBtnText === "登出") {

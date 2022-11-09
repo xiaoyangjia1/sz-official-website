@@ -161,10 +161,6 @@ const MultilevelFilterItem = ({ title, options, onFilter }: FilterInfo) => {
   );
 };
 const Recruitment: NextPage = ({ filterData, jobsData }: any) => {
-  console.log(filterData, jobsData);
-  if (filterData[0].options.length === 0) {
-    return <Empty description="目前暂未开启新一轮招新，敬请期待！" />;
-  }
   const [positionList, setPositionList] = useState<Position[]>(jobsData);
   const [filterList, setFilterList] = useState<Position[]>(jobsData);
 
@@ -199,7 +195,9 @@ const Recruitment: NextPage = ({ filterData, jobsData }: any) => {
     const beginIndex = (pageNumber - 1) * 5;
     setPositionList(filterList.slice(beginIndex, beginIndex + 5));
   };
-
+  if (filterData.length === 0) {
+    return <Empty description="目前暂未开启新一轮招新，敬请期待！" />;
+  }
   return (
     <Layout className={styles.recruitment}>
       <Header className={styles.searchHeader}>

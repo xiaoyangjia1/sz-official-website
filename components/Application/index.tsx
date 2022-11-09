@@ -93,7 +93,7 @@ const UploadFile = ({ applicationItem }: any) => {
     formData.append("batch", batch);
     formData.append("title", title);
     formData.append("email", email);
-    message.warning("上传过程中请勿刷新浏览器")
+    message.warning("上传过程中请勿刷新浏览器");
     const { data: result } = await request({
       url: "/uploadFile",
       method: "post",
@@ -155,17 +155,43 @@ const Application = ({ applicationData }: any) => {
       step: (
         <Steps>
           <Step status="finish" title="投递简历" description="完成" />
-          {el.test ? <Step status={getState(el.test)} title="笔试" /> : null}
+          {el.test ? (
+            <Step
+              status={getState(el.test)}
+              title="笔试"
+              description={
+                el.test === 2 ? "通过" : el.test === 3 ? "未通过" : ""
+              }
+            />
+          ) : null}
           {el.interview ? (
-            <Step status={getState(el.interview)} title="面试" />
+            <Step
+              status={getState(el.interview)}
+              title="面试"
+              description={
+                el.interview === 2 ? "通过" : el.interview === 3 ? "未通过" : ""
+              }
+            />
           ) : null}
           {el.check1 ? (
-            <Step status={getState(el.check1)} title="一轮考核" />
+            <Step
+              status={getState(el.check1)}
+              title="一轮考核"
+              description={
+                el.check1 === 2 ? "通过" : el.check1 === 3 ? "未通过" : ""
+              }
+            />
           ) : null}
           {el.check2 ? (
-            <Step status={getState(el.check2)} title="二轮考核" />
+            <Step
+              status={getState(el.check2)}
+              title="二轮考核"
+              description={
+                el.check2 === 2 ? "通过" : el.check2 === 3 ? "未通过" : ""
+              }
+            />
           ) : null}
-          <Step status={el.offer ? "finish" : "wait"} title="Offer" />
+          <Step status={getState(el.offer)} title="Offer" />
         </Steps>
       ),
       uploadFile: <UploadFile applicationItem={el} />,
