@@ -5,6 +5,7 @@ import request from "@/utils/request";
 import { useState } from "react";
 import useSWR from "swr";
 import Link from "next/link";
+import { getStatusClassNames } from "antd/lib/_util/statusUtils";
 interface DeliveryItem {
   key: React.Key;
   pid: any;
@@ -21,18 +22,13 @@ interface FileItem {
   name: string;
   delete: any;
 }
-const { Step } = Steps;
-const getState = (state: number) => {
-  return state === 1 ? "wait" : state === 2 ? "finish" : "error";
-};
-const UploadFile = ({ applicationItem }: any) => {
+const UploadFile = ({ applicationItem, status }: any) => {
   const { batch, title, email } = applicationItem;
   const [fileData, setFileData] = useState<FileItem[]>([]);
   const fileColumns: ColumnsType<FileItem> = [
     { title: "文件名", dataIndex: "name", key: "name" },
     { title: "操作", dataIndex: "delete", key: "delete" },
   ];
-
   const deleteUploadedFile = async (name: string) => {
     const res = await fetch("/api/deleteUploadedFile", {
       method: "POST",
@@ -102,7 +98,7 @@ const UploadFile = ({ applicationItem }: any) => {
         "Content-Type": "multipart/form-data",
       },
     });
-    const { error_code, data } = result;
+    const { error_code } = result;
     if (error_code === 0) {
       message.success("上传文件成功");
       getUploadedFile("/api/getUploadedFile");
@@ -113,15 +109,53 @@ const UploadFile = ({ applicationItem }: any) => {
 
   return (
     <Table
+      pagination={false}
       style={{ marginTop: "20px" }}
       columns={fileColumns}
       dataSource={fileData}
-      footer={() => (
-        <form method="post" encType="multipart/form-data">
-          <input type="file" multiple onChange={(e) => handleUpload(e)} />
-        </form>
-      )}
+      footer={() => {
+        return status ? (
+          <form method="post" encType="multipart/form-data">
+            <input type="file" multiple onChange={(e) => handleUpload(e)} />
+          </form>
+        ) : null;
+      }}
     />
+  );
+};
+const StepsComponent = ({ el }: any) => {
+  const { Step } = Steps;
+  const { test, interview, check1, check2, offer } = el;
+  const getStatus = (status: number) => {
+    return status === 1 ? "wait" : status === 2 ? "finish" : "error";
+  };
+  const getDescription = (status: number) => {
+    return status === 2 ? "通过" : status === 3 ? "未通过" : "";
+  };
+  const titleArr = [
+    { status: test, title: "笔试" },
+    { status: interview, title: "面试" },
+    { status: check1, title: "一轮考核" },
+    { status: check2, title: "二轮考核" },
+    { status: offer, title: "Offer" },
+  ];
+  const stepList = titleArr.filter((el) => {
+    return !!el.status;
+  });
+  return (
+    <Steps>
+      <Step status="finish" title="投递简历" description="完成" />
+      {stepList.map((el) => {
+        return (
+          <Step
+            key={el.title}
+            status={getStatus(el.status)}
+            title={el.title}
+            description={getDescription(el.status)}
+          />
+        );
+      })}
+    </Steps>
   );
 };
 const Application = ({ applicationData }: any) => {
@@ -132,18 +166,22 @@ const Application = ({ applicationData }: any) => {
     { title: "职位", dataIndex: "title", key: "title" },
     { title: "申请时间", dataIndex: "applyTime", key: "applyTime" },
   ];
-  const data: DeliveryItem[] = applicationData.map((el: any) => {
-    let status = 1;
-    const { test, interview, check1, check2, offer } = el;
-    if (
-      test === 3 ||
-      interview === 3 ||
-      check1 === 3 ||
-      check2 === 3 ||
-      offer === 3
-    ) {
-      status = 0;
+  const getStatus = (steps: number[]) => {
+    for (let i = 0; i < steps.length; i++) {
+      if (steps[i] === 3) {
+        return 0;
+      }
     }
+    return 1;
+  };
+  const data: DeliveryItem[] = applicationData.map((el: any) => {
+    const status = getStatus([
+      el.test,
+      el.interview,
+      el.check1,
+      el.check2,
+      el.offer,
+    ]);
     return {
       key: el.pid,
       pid: <Link href={`/position/${el.pid}`}>{el.pid}</Link>,
@@ -152,49 +190,8 @@ const Application = ({ applicationData }: any) => {
       title: el.title,
       status,
       applyTime: formatDate(el.created_at),
-      step: (
-        <Steps>
-          <Step status="finish" title="投递简历" description="完成" />
-          {el.test ? (
-            <Step
-              status={getState(el.test)}
-              title="笔试"
-              description={
-                el.test === 2 ? "通过" : el.test === 3 ? "未通过" : ""
-              }
-            />
-          ) : null}
-          {el.interview ? (
-            <Step
-              status={getState(el.interview)}
-              title="面试"
-              description={
-                el.interview === 2 ? "通过" : el.interview === 3 ? "未通过" : ""
-              }
-            />
-          ) : null}
-          {el.check1 ? (
-            <Step
-              status={getState(el.check1)}
-              title="一轮考核"
-              description={
-                el.check1 === 2 ? "通过" : el.check1 === 3 ? "未通过" : ""
-              }
-            />
-          ) : null}
-          {el.check2 ? (
-            <Step
-              status={getState(el.check2)}
-              title="二轮考核"
-              description={
-                el.check2 === 2 ? "通过" : el.check2 === 3 ? "未通过" : ""
-              }
-            />
-          ) : null}
-          <Step status={getState(el.offer)} title="Offer" />
-        </Steps>
-      ),
-      uploadFile: <UploadFile applicationItem={el} />,
+      step: <StepsComponent el={el} />,
+      uploadFile: <UploadFile applicationItem={el} status={status} />,
     };
   });
   return (
@@ -222,7 +219,10 @@ const Application = ({ applicationData }: any) => {
           columns={columns}
           expandable={{
             expandedRowRender: (record) => (
-              <div style={{ margin: 0 }}>{record.step}</div>
+              <div style={{ padding: "20px" }}>
+                {record.step}
+                {record.uploadFile}
+              </div>
             ),
           }}
           dataSource={data.filter((el) => {
