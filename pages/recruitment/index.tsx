@@ -77,7 +77,6 @@ const FilterItem = ({ title, options, onFilter }: FilterInfo) => {
       <h2>{title}</h2>
       <Checkbox.Group
         options={options as OptionsItem[]}
-        defaultValue={["Apple"]}
         onChange={onFilter}
       />
     </div>

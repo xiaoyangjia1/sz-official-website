@@ -23,19 +23,17 @@ const Position: NextPage = () => {
       return data;
     }
   );
-  if (err1 || err2)
-    return (
-      <div>
-        {err1?.message}
-        {err2?.message}
-      </div>
-    );
-  if (!positionData || !queryData || positionData.deadline==='')
+  if (err1 || err2) {
+    message.error("岗位加载失败");
+    return <></>;
+  }
+  if (!positionData || !queryData || positionData.deadline === "") {
     return (
       <div className="pageWarp">
         <Spin size="large" />
       </div>
     );
+  }
   const {
     title,
     test,
@@ -70,15 +68,10 @@ const Position: NextPage = () => {
     }
 
     const deliveredInfo = JSON.parse(getCookie("deliveredInfo") as string);
-    if (
-      deliveredInfo[positionData.batch] &&
-      deliveredInfo[positionData.batch] >= 1
-    ) {
+    if (deliveredInfo[batch] && deliveredInfo[batch] >= 1) {
       Modal.warning({
         title: "投递超过次数",
-        content: `你在${positionData.batch}批次已投递${
-          deliveredInfo[positionData.batch]
-        }个岗位，达次数上限，不可再投递该批次`,
+        content: `你在${batch}批次已投递${deliveredInfo[batch]}个岗位，达次数上限，不可再投递该批次`,
         okText: "知道啦",
       });
       return;
@@ -88,9 +81,8 @@ const Position: NextPage = () => {
         content: (
           <div>
             <p>同一批次只能投递一个岗位，是否投递</p>
-            <p style={{color: '#40a9ff'}}>
-              {positionData.batch}-{positionData.category}-
-              {positionData.title}
+            <p style={{ color: "#40a9ff" }}>
+              {batch}-{category}-{title}
             </p>
           </div>
         ),
@@ -113,6 +105,7 @@ const Position: NextPage = () => {
     if (res.status === 200) {
       setDisabled(true);
       message.success("投递成功");
+      router.push("/personal/application");
     }
   };
   return (
