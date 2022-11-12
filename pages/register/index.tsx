@@ -1,6 +1,6 @@
-import { NextPage } from "next";
 import AuthForm from "@/components/AuthForm";
+import { NextPage } from "next";
 const Register: NextPage = () => {
-  return <AuthForm title="创建账号" api="register" />;
+  return <AuthForm />;
 };
 export default Register;
