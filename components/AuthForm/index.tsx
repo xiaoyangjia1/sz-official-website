@@ -19,9 +19,7 @@ const AuthForm = () => {
   const [deg, setDeg] = useState<number>(0);
   const [sliderDisabled, setSliderDisabled] = useState<boolean>(false);
   const [revalidateDisabled, setRevalidateDisabled] = useState<boolean>(true);
-  const [picNum, setPicNum] = useState<number>(
-    1 + Math.floor(Math.random() * 7)
-  );
+  const [picNum, setPicNum] = useState<number>(Math.floor(Math.random() * 7));
   const text =
     pathname === "/register"
       ? "注册"
@@ -111,7 +109,6 @@ const AuthForm = () => {
     }
   };
   const onModalCancel = () => {
-    console.log("1111111");
     setDeg(0);
     setSliderDisabled(false);
     setRevalidateDisabled(true);
@@ -148,7 +145,7 @@ const AuthForm = () => {
     setDeg(0);
     setSliderDisabled(false);
     setRevalidateDisabled(true);
-    setPicNum(1 + Math.floor(Math.random() * 7));
+    setPicNum((picNum + 1) % 7);
   };
   return (
     <>
@@ -292,7 +289,7 @@ const AuthForm = () => {
           style={{
             borderRadius: "50%",
             transform: `rotate(${deg}deg)`,
-            objectFit: "fill"
+            objectFit: "fill",
           }}
         />
         <Button disabled={revalidateDisabled} onClick={handleRevalidate}>

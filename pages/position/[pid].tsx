@@ -23,6 +23,7 @@ const Position: NextPage = () => {
       return data;
     }
   );
+  console.log(err1,err2)
   if (err1 || err2) {
     message.error("岗位加载失败");
     return <></>;

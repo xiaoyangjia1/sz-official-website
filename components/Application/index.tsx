@@ -98,6 +98,7 @@ const UploadFile = ({ applicationItem, status }: any) => {
       },
     });
     const { error_code } = result;
+    console.log(result)
     if (error_code === 0) {
       message.success("上传文件成功");
       getUploadedFile("/api/getUploadedFile");

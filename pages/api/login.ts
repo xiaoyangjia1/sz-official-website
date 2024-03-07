@@ -16,6 +16,7 @@ export default async function handler(
     },
   });
   const { error_code, data, message } = result;
+  console.log(result)
   if (error_code) {
     res.status(error_code).json({ message });
   } else {
